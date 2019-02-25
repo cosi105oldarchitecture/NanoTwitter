@@ -1,3 +1,5 @@
+[Full Diagram](https://dbdiagram.io/d/5c7430a6f7c5bb70c72f1eb8)
+
 User
 
 - name: string
