@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-[Full Diagram](https://dbdiagram.io/d/5c7430a6f7c5bb70c72f1eb8)
-=======
 **DB Diagram: [https://dbdiagram.io/d/5c7430a6f7c5bb70c72f1eb8]()**
->>>>>>> 6729af32b43786a95ddd0ec93dc20a0eb9c19443
 
 User
 
