@@ -1,9 +1,6 @@
-require 'minitest/autorun'
-require 'rack/test'
-require 'faker'
-require_relative '../app'
+require_relative './test_helper'
 require_relative '../models/user'
 
-user = User.create(name: 'Adam', email: 'Pito@brandeis.edu', password: 'thebestgroup')
+user = User.create(name: 'Ari', email: '123@test.com', password: 'also123')
 
 puts user.name
