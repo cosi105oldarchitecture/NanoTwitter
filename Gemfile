@@ -9,3 +9,6 @@ gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
 gem 'sinatra-activerecord'
+gem 'bcrypt'
+gem 'sinatra-flash'
+
