@@ -2,7 +2,7 @@ require 'bcrypt'
 require 'yaml'
 require 'json'
 
-class User
+class Register
   include BCrypt
   attr_reader :name
   
@@ -24,7 +24,7 @@ class User
     if data.key?(username)
       password_hash = Password.new(data[username])
       if password_hash == params[:password]
-        return User.new(username)
+        return Register.new(username)
       end
     end
     return nil

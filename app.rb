@@ -1,13 +1,12 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'sinatra/flash'
-require 'byebug'
 require 'yaml'
 require 'bcrypt'
 require 'json'
 
 require_relative 'lib/authentication'
-require_relative 'lib/user'
+require_relative 'lib/register'
 
 ENV['APP_ROOT'] = settings.root
 
@@ -31,7 +30,7 @@ get '/login' do
 end
 
 post '/login' do
-  if user = User.authenticate(params)
+  if user = Register.authenticate(params)
     session[:user] = user
     redirect '/protected'
   else 
@@ -76,7 +75,7 @@ post '/register' do
 	      f.write(data.to_json)
 	    end
 
-		user = User.new(username)
+		user = Register.new(username)
 		session[:user] = user
 		redirect '/login'
 	end

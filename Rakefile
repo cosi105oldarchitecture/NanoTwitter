@@ -2,7 +2,6 @@ require './app'
 require 'sinatra/activerecord'
 require 'sinatra/activerecord/rake'
 require 'rake/testtask'
-require 'pry-byebug'
 
 Rake::TestTask.new do |t|
   t.deps = ['db:test:prepare']
