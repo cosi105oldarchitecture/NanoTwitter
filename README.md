@@ -1,5 +1,7 @@
 # NanoTwitter
 
+[![Codeship Status for cosi105/NanoTwitter](https://app.codeship.com/projects/ec59bc70-1c93-0137-a172-0eda4e30ac77/status?branch=master)](https://app.codeship.com/projects/328870)
+
 Authors
 * Yang Shang
 * Ari Carr
