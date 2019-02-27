@@ -35,6 +35,7 @@ GEM
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
+    rake (12.3.2)
     sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -58,8 +59,9 @@ DEPENDENCIES
   pry-byebug
   rack
   rack-test
+  rake
   sinatra
   sinatra-activerecord
 
 BUNDLED WITH
-   1.17.2
+   2.0.1
