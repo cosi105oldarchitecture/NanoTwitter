@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :tweets
   has_many :tweet_tags, through: :tweets
+  has_many :mentions, through: :tweet_tags
   has_many :timeline_pieces
   has_many :mentions
 
