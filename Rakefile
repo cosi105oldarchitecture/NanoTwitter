@@ -4,6 +4,6 @@ require 'sinatra/activerecord/rake'
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
-  # Define file path pattern for identifying test files:
-  t.pattern = 'test/*_test.rb'
+  t.test_files = FileList['test/test_helper.rb']
+  t.warning = false
 end
