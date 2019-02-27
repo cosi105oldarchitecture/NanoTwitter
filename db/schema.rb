@@ -10,12 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_201314) do
+ActiveRecord::Schema.define(version: 2019_02_26_212737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "tweet", force: :cascade do |t|
+  create_table "follows", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "followee_id"
+  end
+
+  create_table "hashtags", force: :cascade do |t|
+    t.text "name"
+  end
+
+  create_table "mentions", force: :cascade do |t|
+    t.integer "tweet_id"
+    t.integer "mentioned_user_id"
+  end
+
+  create_table "timeline_pieces", force: :cascade do |t|
+    t.integer "timeline_owner_id"
+    t.integer "tweet_id"
+  end
+
+  create_table "tweet_tags", force: :cascade do |t|
+    t.integer "hashtag_id"
+    t.integer "tweet_id"
+  end
+
+  create_table "tweets", force: :cascade do |t|
     t.string "body"
     t.datetime "created_on"
     t.integer "author_id"
