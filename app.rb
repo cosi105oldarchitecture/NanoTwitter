@@ -11,17 +11,17 @@ ENV['APP_ROOT'] = settings.root
 
 Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 
-TEN_MINUTES   = 60 * 10
-use Rack::Session::Pool, expire_after: TEN_MINUTES # Expire sessions after ten minutes of inactivity
+# Expire sessions after ten minutes of inactivity
+TEN_MINUTES = 60 * 10
+use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
 
-
 get '/' do
-	erb :main
+  erb :main
 end
 
 get '/login' do
-	erb :login
+  erb :login
 end
 
 post '/login' do
@@ -29,8 +29,7 @@ post '/login' do
     session[:user] = user
     redirect '/protected'
   else
-  	puts "wrong"
-    flash[:notice] = 'wrong username or password'
+    flash[:notice] = 'wrong email or password'
     redirect '/login'
   end
 end
@@ -41,27 +40,25 @@ get '/logout' do
   redirect '/'
 end
 
-
 get '/register' do
-	erb :register
+  erb :register
 end
 
 post '/register' do
-	if params[:username].blank? || params[:password].blank?
-		flash[:notice] = 'invalid username or password, please input again!'
-		redirect '/register'
-	else
-		username = params[:username].downcase
-		password = params[:password]
-		user = User.create(username: username, password: password)
-		session[:user] = user
-        byebug
-		redirect '/login'
-	end
+  if params[:email].blank? || params[:password].blank?
+    flash[:notice] = 'invalid email or password, please input again!'
+    redirect '/register'
+  else
+    email = params[:email].downcase
+    password = params[:password]
+    user = User.create(name: params[:name], email: email, password: password)
+    session[:user] = user
+    redirect '/login'
+  end
 end
 
 # add this to routes if this need to be protected.
 get '/protected' do
   authenticate!
-  "Welcome back!"
+  'Welcome back!'
 end

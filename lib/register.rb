@@ -6,18 +6,16 @@ class Register
   attr_reader :name
 
   def self.authenticate(params = {})
-    return nil if params[:username].blank? || params[:password].blank?
-    username = params[:username].downcase
-    target_user = User.find_by(username: username)
-    if target_user
-      if target_user.authenticate(params[:password])
-        return Register.new(username)
-      end
+    return nil if params[:email].blank? || params[:password].blank?
+    email = params[:email].downcase
+    target_user = User.find_by(email: email)
+    if !target_user.nil? && target_user.authenticate(params[:password])
+      return Register.new(email)
     end
-    return nil
+    nil
   end
 
-  def initialize(username)
-    @name = username.capitalize
+  def initialize(email)
+    @name = email.capitalize
   end
 end

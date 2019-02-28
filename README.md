@@ -3,31 +3,26 @@
 [![Codeship Status for cosi105/NanoTwitter](https://app.codeship.com/projects/ec59bc70-1c93-0137-a172-0eda4e30ac77/status?branch=master)](https://app.codeship.com/projects/328870)
 
 Authors
+
 * Yang Shang
 * Ari Carr
 * Brad Nesbitt
 
-NanoTwitter is a light version of twitter, implemented in Ruby with Sinatra.
+NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
+## Changes
 
-# Initializes the db's Follow table
-class CreateFollowTable < ActiveRecord::Migration[5.2]
-  def change
-    create_table :follows do |t|
-      t.integer :follower_id
-      t.integer :followee_id
-    end
-  end
-end
+### 0.2 (2/28/19)
 
-# Initializes the db's Tweet table
-class CreateTweetTable < ActiveRecord::Migration[5.2]
-  def change
-    create_table :tweet do |t|
-      t.string :body
-      t.datetime :created_on
-      t.integer :author_id
-    end
-  end
-end
+- Set up skeleton Sinatra app with migrations for schema (Brad)
+- Write model files corresponding to schema with ActiveRecord relations (Brad/Ari)
+- Implement user authentication (Yang)
+- Set up automatic deployment to Heroku and testing via Codeship (Ari)
+- Set up a "testing skeleton" for ease of writing tests in the future (Ari)
 
+### 0.1 (2/14/19)
+
+- Design the schema
+- Design the UI prototypes
+- Design the routes
+- Create standard repo files
