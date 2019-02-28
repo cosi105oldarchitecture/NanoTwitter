@@ -1,5 +1,6 @@
 # Represents the db's User table
 class User < ActiveRecord::Base
+  has_secure_password
   has_many :follows_from_me, class_name: 'Follow', foreign_key: :follower_id
   has_many :followees, through: :follows_from_me
 
@@ -16,5 +17,11 @@ class User < ActiveRecord::Base
   # A convenient method for following a user
   def follow(followee)
     Follow.create(follower_id: id, followee_id: followee.id)
+  end
+
+  def self.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
   end
 end

@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'activerecord'
+gem 'bcrypt'
 gem 'faker'
 gem 'pg'
 gem 'pry-byebug'
@@ -9,5 +10,4 @@ gem 'rack-test'
 gem 'rake'
 gem 'sinatra'
 gem 'sinatra-activerecord'
-gem 'bcrypt'
 gem 'sinatra-flash'
