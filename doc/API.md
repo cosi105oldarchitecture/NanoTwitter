@@ -9,7 +9,7 @@
 **Tweets**
 
 * `GET` `/`
-* `GET` `/tweets/`
+* `GET` `/tweets`
 * `GET` `/tweets/mentions`
 * `POST` `/tweets/new` 
 
@@ -21,13 +21,11 @@
 
 **Log-In**
 
-* `GET` `/login`
 * `POST` `/login`
 
 **Sign-Up**
 
-* `GET` `/signup`
-* `POST` `/signup`
+* [`POST` `/signup`](#signup)
 
 <br/>
 --
@@ -332,6 +330,7 @@
 <br/>
 --
 
+<a name="signup"><a/>
 # POST /signup
 
 ### Resource URL  
