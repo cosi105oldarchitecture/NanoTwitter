@@ -9,7 +9,7 @@
 **Tweets**
 
 * `GET` `/`
-* `GET` `/tweets/:user_id`
+* `GET` `/tweets/`
 * `GET` `/tweets/mentions`
 * `POST` `/tweets/new` 
 
