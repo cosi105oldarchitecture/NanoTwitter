@@ -1,6 +1,7 @@
 # NanoTwitter API Documentation
 
 --
+
 # Overview
 
 **Note** Routes start with `/api/v1`  
@@ -30,6 +31,7 @@
 
 <br/>
 --
+
 # GET /tweets/
 
 ### Resource URL  
@@ -66,6 +68,7 @@
 
 <br/>
 --
+
 # GET /tweets/mentions
 
 ### Resource URL  
@@ -102,6 +105,7 @@
 
 <br/>
 --
+
 # POST /tweets/new
 
 ### Resource URL  
@@ -135,6 +139,7 @@
 
 <br/>
 --
+
 # GET /users/followers
 
 ### Resource URL  
@@ -173,6 +178,7 @@
 
 <br/>
 --
+
 # POST /users/followers
 
 ### Resource URL  
@@ -211,6 +217,7 @@
 
 <br/>
 --
+
 # POST /users/following
 
 ### Resource URL  
@@ -244,6 +251,7 @@
 
 <br/>
 --
+
 # GET /users/following
 
 ### Resource URL  
@@ -282,6 +290,7 @@
 
 <br/>
 --
+
 # POST /login
 
 ### Resource URL  
@@ -322,6 +331,7 @@
 
 <br/>
 --
+
 # POST /signup
 
 ### Resource URL  
