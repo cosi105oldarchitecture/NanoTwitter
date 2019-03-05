@@ -126,12 +126,18 @@
 ```
 {
 	"session_token": "234khj56hsro",
-	"body": "This is most scalable app I've ever used!"
+	"body": "This is the most scalable app I've ever used!"
 }
 ```
 
 ### Example Response
-`200 OK` (Tweet successfully posted)  
+`201 Created` (Tweet successfully created)
+```
+{
+	"id": 88,
+	"body": "This is the most scalable app I've ever used!"
+}
+```
 `401 Unauthorized` (Invalid or expired session)  
 `500 Internal Server Error`
 
@@ -243,7 +249,13 @@
 ```
 
 ### Example Response
-`200 OK` (Successfully following user)  
+`201 Created` (Successfully following user)  
+```
+{
+	"follower_id": 72,
+	"followee_id": 48
+}
+```
 `401 Unauthorized` (Invalid or expired session token)  
 `500 Internal Server Error`
 
@@ -318,7 +330,7 @@
 
 ### Example Response
 
-`200 OK` (Successfully authenticated)  
+`201 Created` (Authenticated session created)  
 ```
 {
 	"session_token": "ldskfj123ewlksdfh8124"
@@ -362,7 +374,14 @@
 
 ### Example Response
 
-`200 OK` (Account created)  
+`201 Created` (User created)  
+```
+{
+	"name": "Ari Carr",
+	"email": "acarr@ntwitter.com",
+	"password": "mypassword123"
+}
+```
 `403 Forbidden` (Email not unique)  
 `500 Internal Server Error`  
 
