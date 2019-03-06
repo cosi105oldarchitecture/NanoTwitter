@@ -24,7 +24,7 @@ def parse_tweet(tweet_body)
 end
 
 # Represents in db any hashtags extracted from tweet
-def set_hashtag(tweet, hashtags)
+def set_hashtags(tweet, hashtags)
   hashtags.each do |tag_text|
     # If tag doesn't already exist, create it.
     tag = Hashtag.find_by(name: tag_text) || Hashtag.create(name: tag_text)
@@ -33,7 +33,7 @@ def set_hashtag(tweet, hashtags)
 end
 
 # Represents in db any mentions extracted from tweet
-def set_mention(tweet, mentions)
+def set_mentions(tweet, mentions)
   mentions.each do |name|
     # Do users mention one another by full name? How do we hadle spaces?
     mentioned_user = User.find_by(name: name)

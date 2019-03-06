@@ -76,12 +76,12 @@ end
   # Use session token to get author_id
   # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
   # Add error handling
-  # Check that user is logged in 
+  # Check that user is logged in
 post '/api/v1/tweets/new' do
   authenticate!
   author_id = session[:user].user.id
   tweet_body = params[:tweet][:body]
-  set_new_tweet(author_id, tweet_body).to_json
+  puts set_new_tweet(author_id, tweet_body).to_json
   redirect(:tweets)
 end
 
@@ -90,6 +90,5 @@ end
 get '/tweets' do
   authenticate!
   user = User.find(session[:user].user.id)
-  puts Follow.joins('INNER JOIN tweets ON tweets.author_id=followee_id').where(follower_id: user.id)
   # erb :tweets
 end
