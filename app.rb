@@ -28,14 +28,14 @@ end
 post '/login' do
   if user = Register.authenticate(params)
     session[:user] = user
-    redirect '/protected'
+    redirect '/users'
   else
     flash[:notice] = 'wrong email or password'
     redirect '/login'
   end
 end
 
-get '/logout' do
+post '/logout' do
   session[:user] = nil
   flash[:notice] = 'You have been signed out.'
   redirect '/'
@@ -57,6 +57,48 @@ post '/register' do
     redirect '/login'
   end
 end
+
+get '/users' do
+  authenticate!
+  @user = session[:user]
+  erb :users
+end
+
+get '/users/followers' do
+  authenticate!
+  @user = session[:user]
+  @followers = Follow.where(followee_id: @user.id)
+  erb :user_follower
+end
+
+
+get '/users/following' do
+  authenticate!
+  @user = session[:user]
+  @following = Follow.where(follower_id: @user.id)
+  erb :user_following
+end
+
+post '/users/following' do
+  authenticate!
+  user = session[:user]
+  followee = User.find_by(name: params[:name])
+  Follow.create(follower_id: user.id, followee_id: followee.id)
+  flash[:notice] = 'succeed'
+  redirect '/users'
+end
+
+get '/users/unfollowing' do
+  authenticate!
+  user = session[:user]
+  @users = User.where.not(id: user.id)
+  following = Follow.where(follower_id: user.id)
+  for f in following do
+    @user = @user.where.not(User.find_by(id: f.followee.id))
+  end
+  erb :unfollowing
+end
+
 
 # add this to routes if this need to be protected.
 get '/protected' do

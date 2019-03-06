@@ -6,7 +6,7 @@ ENV['APP_ENV'] = 'test'
 require 'minitest/autorun'
 require 'rack/test'
 require 'faker'
-require 'pry-byebug'
+# require 'pry-byebug'
 require_relative '../app'
 
 # Define file path pattern for identifying test files:
