@@ -2,6 +2,6 @@
 
   <% @users.each do |user| %>
   	<form action="/users/following" method="post">
-  	<p>Name: <%= user.email %><button name="email" type="submit" value="<%= user.name %>">Follow</button></p>
-  </form>
+  	<p>Name: <%= user.name %><button name="name" type="submit" value="<%= user.name %>">Follow</button></p>
+  	</form>
   <% end %>

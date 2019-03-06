@@ -34,7 +34,7 @@ post '/login' do
   end
 end
 
-get '/logout' do
+post '/logout' do
   session[:user] = nil
   flash[:notice] = 'You have been signed out.'
   redirect '/'
@@ -81,7 +81,7 @@ end
 post '/users/following' do
   authenticate!
   user = session[:user]
-  followee = User.find_by(email: params[:email])
+  followee = User.find_by(name: params[:name])
   Follow.create(follower_id: user.id, followee_id: followee.id)
   flash[:notice] = 'succeed'
   redirect '/users'
@@ -90,12 +90,10 @@ end
 get '/users/unfollowing' do
   authenticate!
   user = session[:user]
-  @users = User.all
-  @users.delete(user)
+  @users = User.where.not(id: user.id)
   following = Follow.where(follower_id: user.id)
   for f in following do
-    u = User.find_by(id: f.followee_id)
-    @users.delete(u)
+    @user = @user.where.not(User.find_by(id: f.followee.id))
   end
   erb :unfollowing
 end
