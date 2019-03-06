@@ -6,6 +6,7 @@ require 'bcrypt'
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
+require_relative 'lib/helpers'
 
 ENV['APP_ROOT'] = settings.root
 
@@ -61,4 +62,34 @@ end
 get '/protected' do
   authenticate!
   'Welcome back!'
+end
+
+# Page for composing/posting new tweet.
+get '/tweets/new' do
+  authenticate!
+  erb :new_tweet
+end
+
+# API endpoint for creating/posting a new tweet.
+  # Replace "v1" with global variable
+  # Pass session token as parameter
+  # Use session token to get author_id
+  # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
+  # Add error handling
+  # Check that user is logged in 
+post '/api/v1/tweets/new' do
+  authenticate!
+  author_id = session[:user].user.id
+  tweet_body = params[:tweet][:body]
+  set_new_tweet(author_id, tweet_body).to_json
+  redirect(:tweets)
+end
+
+# Lists user's followed tweets.
+  # Get timeline pieces
+get '/tweets' do
+  authenticate!
+  user = User.find(session[:user].user.id)
+  puts Follow.joins('INNER JOIN tweets ON tweets.author_id=followee_id').where(follower_id: user.id)
+  # erb :tweets
 end

@@ -3,7 +3,12 @@ require 'yaml'
 
 class Register
   include BCrypt
-  attr_reader :name
+  attr_reader :name, :user # Should change this to :email for clarity
+
+  def initialize(email)
+    @name = email.capitalize
+    @user = User.find_by(email: email)
+  end
 
   def self.authenticate(params = {})
     return nil if params[:email].blank? || params[:password].blank?
@@ -13,9 +18,5 @@ class Register
       return Register.new(email)
     end
     nil
-  end
-
-  def initialize(email)
-    @name = email.capitalize
   end
 end
