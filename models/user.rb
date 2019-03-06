@@ -1,6 +1,8 @@
 # Represents the db's User table
 class User < ActiveRecord::Base
   has_secure_password
+  validates :email, presence: true, uniqueness: true
+
   has_many :follows_from_me, class_name: 'Follow', foreign_key: :follower_id
   has_many :followees, through: :follows_from_me
 
