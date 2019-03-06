@@ -10,7 +10,7 @@ class Register
     email = params[:email].downcase
     target_user = User.find_by(email: email)
     if !target_user.nil? && target_user.authenticate(params[:password])
-      return Register.new(email)
+      return target_user
     end
     nil
   end
