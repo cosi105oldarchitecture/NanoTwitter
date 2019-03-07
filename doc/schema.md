@@ -3,7 +3,7 @@
 User
 
 - name: string
-- email: string
+- handle: string
 - password: digest
 - api_token: text
 - has_many follows, as follower
