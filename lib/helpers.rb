@@ -23,21 +23,22 @@ def parse_tweet(tweet_body)
   }
 end
 
+# Add new tweet to each follower's timeline
+def set_timelines(tweet)
+  tweet.author.followers.each { |follower| follower.timeline_tweets << tweet }
+end
+
 # Represents in db any hashtags extracted from tweet
 def set_hashtags(tweet, hashtags)
   hashtags.each do |tag_text|
-    # If tag doesn't already exist, create it.
-    tag = Hashtag.find_by(name: tag_text) || Hashtag.create(name: tag_text)
-    TweetTag.create(tweet_id: tweet.id, hashtag_id: tag.id)
+    Hashtag.find_or_create_by(name: tag_text).tweets << tweet
   end
 end
 
 # Represents in db any mentions extracted from tweet
 def set_mentions(tweet, mentions)
-  mentions.each do |name|
-    # Do users mention one another by full name? How do we hadle spaces?
-    mentioned_user = User.find_by(name: name)
-    # If mentioned user exists, create mention
-    mentioned_user ? Mention.create(tweet_id: tweet.id, mentioned_user_id: mentioned_user.id) : nil
+  mentions.each do |handle|
+    mentioned_user = User.find_by(handle: handle)
+    mentioned_user.mentioned_tweets << tweet unless mentioned_user.nil?
   end
 end

@@ -315,7 +315,7 @@
 ### Parameters  
 |Key|Required?
 |:--|:--|:--
-|email|Yes
+|handle|Yes
 |password|Yes
 
 ### Example Request  
@@ -323,7 +323,7 @@
 
 ```
 {
-	"email": "acarr@ntwitter.com",
+	"handle": "@carrsthemovie",
 	"password": "mypassword123"
 }
 ```
@@ -358,7 +358,7 @@
 |Key|Required?
 |:--|:--|:--
 |name|Yes
-|email|Yes
+|handle|Yes
 |password|Yes
 
 ### Example Request  
@@ -367,7 +367,7 @@
 ```
 {
 	"name": "Ari Carr",
-	"email": "acarr@ntwitter.com",
+	"handle": "@carrsthemovie",
 	"password": "mypassword123"
 }
 ```
@@ -378,11 +378,11 @@
 ```
 {
 	"name": "Ari Carr",
-	"email": "acarr@ntwitter.com",
+	"handle": "@carrsthemovie",
 	"password": "mypassword123"
 }
 ```
-`403 Forbidden` (Email not unique)  
+`403 Forbidden` (Handle not unique)  
 `500 Internal Server Error`  
 
 <br/>

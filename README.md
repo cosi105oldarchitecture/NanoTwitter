@@ -12,6 +12,14 @@ NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
 ## Changes
 
+### 0.3 (3/7/19)
+
+- Set up seeding for "official" seed data (Brad & Ari)
+- Implemented user routes + initial view (Yang)
+- Implemented tweet routes + initial view (Brad)
+- Implemented model testing (Ari)
+- Updated schema (Ari & Brad)
+
 ### 0.2 (2/28/19)
 
 - Set up skeleton Sinatra app with migrations for schema (Brad)
