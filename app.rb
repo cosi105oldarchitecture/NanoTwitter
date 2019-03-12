@@ -11,6 +11,7 @@ require 'pry-byebug' if Sinatra::Base.development?
 require_relative 'lib/authentication'
 require_relative 'lib/register'
 require_relative 'lib/helpers'
+require_relative 'version'
 
 ENV['APP_ROOT'] = settings.root
 
@@ -20,6 +21,8 @@ Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 TEN_MINUTES = 60 * 10
 use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
+
+API_PATH = "/api/#{NanoTwitter::VERSION}"
 
 get '/' do
   erb :main
@@ -114,13 +117,12 @@ get '/tweets/new' do
 end
 
 # API endpoint for creating/posting a new tweet.
-  # Replace "v1" with global variable
   # Pass session token as parameter
   # Use session token to get author_id
   # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
   # Add error handling
   # Check that user is logged in
-post '/api/v1/tweets/new' do
+post "#{API_PATH}/tweets/new" do
   authenticate!
   author_id = session[:user].id
   tweet_body = params[:tweet][:body]
