@@ -7,13 +7,12 @@ class SeedParser
   attr_reader :user_hash, :users_seeded, :user_cap, :tweets_seeded, :tweet_cap
 
   def initialize
-    @user_cap = nil
-    @tweet_cap = nil
+    @user_cap = nil # Maximum number of users to seed
+    @tweet_cap = nil # Maximum number of tweets to seeds
     import_users
     import_tweets
     import_follows
     import_timelines
-    # Check whether test user already exists first!!!
     User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
   end
 

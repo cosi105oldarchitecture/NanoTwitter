@@ -1,7 +1,12 @@
-<form action="/login" method="post">
-  <fieldset>
-    <p><label for="handle" class="handle">Handle</label><input id="handle" maxlength="100" name="handle" size="25" type="text"></p>
-    <p><label for="password" class="password">Password</label><input maxlength="25" name="password" size="25" type="password"></p>
-    <p><input type="submit" value="Log In"></p>
-  </fieldset>
-</form>
+<link rel="stylesheet" href="<%= url('/logged_out.css') %>">
+<div class="formcards-container">
+  <div class="formcard">
+    <form action="/login" method="post">
+      <input id="handle" maxlength="100" name="handle" type="text" placeholder="user handle">
+      <br/>
+      <input maxlength="25" name="password" type="password" placeholder="password">
+      <br/>
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+</div>
