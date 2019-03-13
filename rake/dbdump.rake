@@ -8,7 +8,7 @@ namespace :db do
   namespace :dump do
     desc 'Loads the database from a SQL dump file'
     task load: ['db:drop', 'db:create'] do
-      system "#{ENV['LOAD_DUMP']} #{ENV['PG_DUMP_FILE']}"
+      system "psql -f #{ENV['PG_DUMP_FILE']} #{ENV['PG_HOST']}"
       ActiveRecord::Base.connection.tables.each do |t|
         ActiveRecord::Base.connection.reset_pk_sequence!(t)
       end
