@@ -26,4 +26,17 @@ mapped_tweet_rows = tweet_rows.map { |row| { author_id: row[0], body: row[1], cr
 
 User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
 
-# Tweet.all.each { |t| set_timelines(t) }
+Tweet.all.each { |t| set_timelines(t) }
+
+
+
+
+
+
+
+
+
+
+
+
+

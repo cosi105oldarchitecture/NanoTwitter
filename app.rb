@@ -6,11 +6,12 @@ require 'bcrypt'
 
 # Byebug will be conveniently accessible in dev but throw
 # an error if we accidentally deploy with a breakpoint
-require 'pry-byebug' if Sinatra::Base.development?
+# require 'pry-byebug' if Sinatra::Base.development?
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
 require_relative 'lib/helpers'
+require_relative 'lib/seeds'
 
 ENV['APP_ROOT'] = settings.root
 
@@ -135,3 +136,37 @@ get '/tweets' do
   user = User.find(session[:user].id)
   # erb :tweets
 end
+
+get '/test' do
+  erb :test
+end
+
+post '/test/reset/all' do
+  delete_all
+  load './seeds.rb'
+end
+
+post '/test/reset/standard?users=100&tweets=100' do
+  delete_all
+  seed_users(100)
+  seed_follows(100)
+  seed_tweets(100)
+
+end
+
+# post '/test/user/:userid/tweets?count=n' do
+
+# {u} can be the user id of some user, or the keyword testuser
+# n is how many randomly generated tweets are submitted on that users behalf
+
+# end
+
+
+
+# get '/test/status' do
+
+# end
+
+
+
+
