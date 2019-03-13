@@ -4,9 +4,13 @@ require 'sinatra/activerecord'
 require 'sinatra/flash'
 require 'yaml'
 
-# Byebug will be conveniently accessible in dev but throw
-# an error if we accidentally deploy with a breakpoint
-require 'pry-byebug' if Sinatra::Base.development?
+if Sinatra::Base.development?
+  # load local environment variables
+  require 'dotenv'
+  Dotenv.load 'config/local_vars.env'
+
+  require 'pry-byebug' if Sinatra::Base.development?
+end
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
