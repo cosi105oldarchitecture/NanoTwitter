@@ -31,7 +31,7 @@ end
 post '/login' do
   if user = Register.authenticate(params)
     session[:user] = user
-    redirect '/users'
+    redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
     redirect '/login'
@@ -66,11 +66,11 @@ get '/users/profile' do
   erb :profile
 end
 
-get '/users' do
-  authenticate!
-  @user = session[:user]
-  erb :users
-end
+# get '/users' do
+#   authenticate!
+#   @user = session[:user]
+#   erb :users
+# end
 
 get '/users/followers' do
   authenticate!
@@ -107,7 +107,6 @@ end
 # add this to routes if this need to be protected.
 get '/protected' do
   authenticate!
-  'Welcome back!'
 end
 
 # Page for composing/posting new tweet.
