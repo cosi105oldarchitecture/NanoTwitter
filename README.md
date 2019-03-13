@@ -4,13 +4,20 @@
 
 Authors
 
-* Yang Shang
-* Ari Carr
-* Brad Nesbitt
+- Yang Shang
+- Ari Carr
+- Brad Nesbitt
 
 NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
 ## Changes
+
+### 0.4 (3/13/19)
+
+- Resolve Heroku DB row limit (Ari)
+- Implement dynamic version numbers in route URLs (Ari)
+- Implement test interface & seed_helper (Yang)
+- Implement version 1 of UI (Brad)
 
 ### 0.3 (3/7/19)
 
