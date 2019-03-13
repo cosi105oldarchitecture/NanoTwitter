@@ -1,8 +1,8 @@
+require 'bcrypt'
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'sinatra/flash'
 require 'yaml'
-require 'bcrypt'
 
 if Sinatra::Base.development?
   # load local environment variables
@@ -18,7 +18,6 @@ require_relative 'lib/helpers'
 require_relative 'version'
 
 ENV['APP_ROOT'] = settings.root
-
 Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 
 # Expire sessions after ten minutes of inactivity
@@ -29,17 +28,17 @@ helpers Authentication
 API_PATH = "/api/#{NanoTwitter::VERSION}"
 
 get '/' do
-  erb :main
+  erb :landing_page, layout: false
 end
 
 get '/login' do
-  erb :login
+  erb :login, layout: false
 end
 
 post '/login' do
   if user = Register.authenticate(params)
     session[:user] = user
-    redirect '/users'
+    redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
     redirect '/login'
@@ -53,7 +52,7 @@ post '/logout' do
 end
 
 get '/register' do
-  erb :register
+  erb :register, layout: false
 end
 
 post '/register' do
@@ -69,23 +68,30 @@ post '/register' do
   end
 end
 
-get '/users' do
-  authenticate!
+get '/users/profile' do
   @user = session[:user]
-  erb :users
+  erb :profile
 end
+
+# get '/users' do
+#   authenticate!
+#   @user = session[:user]
+#   erb :users
+# end
 
 get '/users/followers' do
   authenticate!
-  @user = session[:user]
-  @followers = Follow.where(followee_id: @user.id)
+  user = session[:user]
+  # user = User.find(1000) #REMOVE
+  @followers = user.followers
   erb :user_follower
 end
 
 get '/users/following' do
   authenticate!
-  @user = session[:user]
-  @following = Follow.where(follower_id: @user.id)
+  user = session[:user]
+  # user = User.find(1000) #REMOVE
+  @followees = user.followees
   erb :user_following
 end
 
@@ -101,9 +107,6 @@ end
 get '/users/unfollowing' do
   authenticate!
   user = session[:user]
-  # @users = User.where.not(id: user.id)
-  # following = Follow.where(follower_id: user.id)
-  # followees = user.followees.pluck(:id)
   @users = User.all - user.followees
   erb :unfollowing
 end
@@ -111,7 +114,6 @@ end
 # add this to routes if this need to be protected.
 get '/protected' do
   authenticate!
-  'Welcome back!'
 end
 
 # Page for composing/posting new tweet.
@@ -139,5 +141,7 @@ end
 get '/tweets' do
   authenticate!
   user = User.find(session[:user].id)
-  # erb :tweets
+  # user = User.find(1000) #REMOVE
+  @timeline = user.timeline_tweets
+  erb :tweets
 end

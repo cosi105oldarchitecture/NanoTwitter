@@ -48,6 +48,8 @@ GEM
       sinatra (>= 1.0)
     sinatra-flash (0.3.0)
       sinatra (>= 1.0.0)
+    sinatra-partial (1.0.1)
+      sinatra (>= 1.4)
     thread_safe (0.3.6)
     tilt (2.0.9)
     tzinfo (1.2.5)
@@ -69,6 +71,7 @@ DEPENDENCIES
   sinatra
   sinatra-activerecord
   sinatra-flash
+  sinatra-partial
 
 BUNDLED WITH
    2.0.1
