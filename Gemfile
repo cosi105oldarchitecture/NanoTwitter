@@ -10,6 +10,7 @@ gem 'rake'
 gem 'sinatra'
 gem 'sinatra-activerecord'
 gem 'sinatra-flash'
+gem 'dotenv'
 
 group :development do
   gem 'pry-byebug'

@@ -5,13 +5,12 @@ end
 def load_seed(model_params, model_class)
   i = 0
   model_params.each do |params|
-    model_class.create(params)
+    model_class.new(params).save(validate: false)
     puts "#{model_class.name} #{i += 1} / #{model_params.size}"
   end
 end
 
 require 'csv'
-Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 user_rows = get_csv('users')
 tweet_rows = get_csv('tweets')
 follow_rows = get_csv('follows')
@@ -25,5 +24,3 @@ mapped_tweet_rows = tweet_rows.map { |row| { author_id: row[0], body: row[1], cr
 [[mapped_user_rows, User], [mapped_tweet_rows, Tweet], [mapped_follow_rows, Follow]].each { |arr| load_seed(arr[0], arr[1]) }
 
 User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
-
-# Tweet.all.each { |t| set_timelines(t) }
