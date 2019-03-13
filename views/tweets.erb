@@ -1,13 +1,7 @@
-<h1>Tweets</h1>
-
-<% @tweets.each do |tweet| %>
-  <div>
-    <div>
-      <%= tweet[:body] %>
-    <div>
-    <div>
-      Posted <%= tweet[:created_on] %>
-    </div>
-  </div>
-  <br/>
-<% end %>
+<ol>
+  <% @timeline.each do |tweet| %>
+    <li>
+      <%= tweet.body %>
+    </li>
+  <% end %>
+</ol>

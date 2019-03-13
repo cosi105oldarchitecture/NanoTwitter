@@ -1,8 +1,8 @@
+require 'bcrypt'
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'sinatra/flash'
 require 'yaml'
-require 'bcrypt'
 
 # Byebug will be conveniently accessible in dev but throw
 # an error if we accidentally deploy with a breakpoint
@@ -13,7 +13,6 @@ require_relative 'lib/register'
 require_relative 'lib/helpers'
 
 ENV['APP_ROOT'] = settings.root
-
 Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 
 # Expire sessions after ten minutes of inactivity
@@ -22,11 +21,11 @@ use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
 
 get '/' do
-  erb :main
+  erb :landing_page, layout: false
 end
 
 get '/login' do
-  erb :login
+  erb :login, layout: false
 end
 
 post '/login' do
@@ -46,7 +45,7 @@ post '/logout' do
 end
 
 get '/register' do
-  erb :register
+  erb :register, layout: false
 end
 
 post '/register' do
@@ -62,6 +61,11 @@ post '/register' do
   end
 end
 
+get '/users/profile' do
+  @user = session[:user]
+  erb :profile
+end
+
 get '/users' do
   authenticate!
   @user = session[:user]
@@ -70,15 +74,17 @@ end
 
 get '/users/followers' do
   authenticate!
-  @user = session[:user]
-  @followers = Follow.where(followee_id: @user.id)
+  user = session[:user]
+  # user = User.find(1000) #REMOVE
+  @followers = user.followers
   erb :user_follower
 end
 
 get '/users/following' do
   authenticate!
-  @user = session[:user]
-  @following = Follow.where(follower_id: @user.id)
+  user = session[:user]
+  # user = User.find(1000) #REMOVE
+  @followees = user.followees
   erb :user_following
 end
 
@@ -94,9 +100,6 @@ end
 get '/users/unfollowing' do
   authenticate!
   user = session[:user]
-  # @users = User.where.not(id: user.id)
-  # following = Follow.where(follower_id: user.id)
-  # followees = user.followees.pluck(:id)
   @users = User.all - user.followees
   erb :unfollowing
 end
@@ -133,5 +136,7 @@ end
 get '/tweets' do
   authenticate!
   user = User.find(session[:user].id)
-  # erb :tweets
+  # user = User.find(1000) #REMOVE
+  @timeline = user.timeline_tweets
+  erb :tweets
 end
