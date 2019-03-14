@@ -7,12 +7,11 @@ require 'faker'
 
 # Byebug will be conveniently accessible in dev but throw
 # an error if we accidentally deploy with a breakpoint
-# require 'pry-byebug' if Sinatra::Base.development?
+require 'pry-byebug' if Sinatra::Base.development?
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
 require_relative 'lib/helpers'
-# require_relative 'lib/seeds'
 require_relative 'lib/seeds_helper'
 
 
