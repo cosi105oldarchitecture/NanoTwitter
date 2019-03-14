@@ -3,13 +3,13 @@
 # that purges the database and creates fixtures before every test
 
 ENV['APP_ENV'] = 'test'
-ENV['PGDATABASE'] = 'ntwitter_test'
 require 'simplecov'
 SimpleCov.start
 require 'minitest/autorun'
 require 'rack/test'
 require 'faker'
 require_relative '../app'
+ENV['PGDATABASE'] = ActiveRecord::Base.subclasses.first.connection.current_database
 
 # Define file path pattern for identifying test files:
 test_pattern = 'test/*/*_test.rb'
