@@ -7,4 +7,10 @@ class Tweet < ActiveRecord::Base
   has_many :mentioned_users, through: :mentions
   has_many :timeline_pieces
   has_many :timeline_users, through: :timeline_pieces, source: :timeline_owner
+
+  def fanout
+    columns = %i[timeline_owner_id tweet_id]
+    pieces = author.follows_to_me.map { |f| [f.follower_id, id] }
+    TimelinePiece.import columns, pieces
+  end
 end

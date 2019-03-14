@@ -1,27 +1,27 @@
 require 'bcrypt'
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'activerecord-import'
 require 'sinatra/flash'
 require 'yaml'
-<<<<<<< HEAD
-=======
 require 'bcrypt'
 require 'faker'
->>>>>>> yangshang
+require 'newrelic_rpm'
 
-# Byebug will be conveniently accessible in dev but throw
-# an error if we accidentally deploy with a breakpoint
-require 'pry-byebug' if Sinatra::Base.development?
+unless Sinatra::Base.production?
+  # load local environment variables
+  require 'dotenv'
+  Dotenv.load 'config/local_vars.env'
+
+  require 'pry-byebug'
+end
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
 require_relative 'lib/helpers'
-<<<<<<< HEAD
 require_relative 'version'
-=======
 require_relative 'lib/seeds_helper'
 
->>>>>>> yangshang
 
 ENV['APP_ROOT'] = settings.root
 Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
@@ -88,7 +88,6 @@ end
 get '/users/followers' do
   authenticate!
   user = session[:user]
-  # user = User.find(1000) #REMOVE
   @followers = user.followers
   erb :user_follower
 end
@@ -96,7 +95,6 @@ end
 get '/users/following' do
   authenticate!
   user = session[:user]
-  # user = User.find(1000) #REMOVE
   @followees = user.followees
   erb :user_following
 end

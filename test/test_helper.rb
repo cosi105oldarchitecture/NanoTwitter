@@ -18,10 +18,9 @@ end
 describe 'NanoTwitter' do
   before do
     ActiveRecord::Base.subclasses.each(&:destroy_all)
-    @ari = User.create(name: 'Ari', handle: '@ari', password: 'ari123')
-    @brad = User.create(name: 'Brad', handle: '@brad', password: 'brad123')
-    @yang = User.create(name: 'Yang', handle: '@yang', password: 'yang123')
-    @pito = User.create(name: 'Pito', handle: '@pito', password: 'pito123')
+    names = %w[ari brad yang pito]
+    users = names.map { |s| User.create(name: s.capitalize, handle: "@#{s}", password: "#{s}123") }
+    @ari, @brad, @yang, @pito = users
   end
 
   Dir["#{ENV['APP_ROOT']}/#{test_pattern}"].each { |file| require file }

@@ -7,36 +7,35 @@ class SeedParser
   attr_reader :user_hash, :users_seeded, :user_cap, :tweets_seeded, :tweet_cap
 
   def initialize
-    @user_cap = nil
-    @tweet_cap = nil
+    @user_cap = nil # Maximum number of users to seed
+    @tweet_cap = nil # Maximum number of tweets to seeds
     import_users
     import_tweets
     import_follows
     import_timelines
-    # Check whether test user already exists first!!!
     User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
   end
 
   # Seeds N users and their data in associated tables.
     # e.g. options = {tweets: 100}
-  def seed_users(num_users, options={})
+  def seed_users(num_users, options = { 'tweets': nil })
+    @user_cap = num_users
+    @tweet_cap = options[:tweets]
 
-    options[:tweets].nil
-
-    @user_hash.keys[0...num_users].each do |user_id|
-      # ...
+    @user_hash.keys[0...@user_cap].each do |user_id|
+      seed_user_data(user_id)
     end
   end
 
   # Inserts all data associated with a user into the db
-  def seed_user_data(user_id, options={ 'tweets': nil })
+  def seed_user_data(user_id)
     user_data = @user_hash[user_id.to_sym]
     info = user_data[:user_row]
     User.create(id: user_id, name: info[1], handle: "@#{info[1] << info[0]}".downcase, password: "@#{info[1] << info[0]}".downcase)
     @users_seeded += 1
 
     user_data[:tweets].each do |row|
-      if options[:tweets].nil || @tweets_seeded <= options[:tweets]
+      if @tweet_cap.nil? || @tweets_seeded <= @tweet_cap
         Tweets.create(author_id: user_id, body: row[1], created_on: row[2])
         @tweets_seeded += 1
       end

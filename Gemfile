@@ -12,6 +12,9 @@ gem 'sinatra-activerecord'
 gem 'sinatra-flash'
 gem 'minitest'
 gem 'rails_helper'
+gem 'dotenv'
+gem 'activerecord-import'
+gem 'newrelic_rpm'
 
 group :development do
   gem 'pry-byebug'
