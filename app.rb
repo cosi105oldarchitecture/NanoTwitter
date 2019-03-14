@@ -82,7 +82,6 @@ end
 get '/users/followers' do
   authenticate!
   user = session[:user]
-  # user = User.find(1000) #REMOVE
   @followers = user.followers
   erb :user_follower
 end
@@ -90,7 +89,6 @@ end
 get '/users/following' do
   authenticate!
   user = session[:user]
-  # user = User.find(1000) #REMOVE
   @followees = user.followees
   erb :user_following
 end
