@@ -1,15 +1,16 @@
 require 'bcrypt'
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'activerecord-import'
 require 'sinatra/flash'
-require 'yaml'
+require 'newrelic_rpm'
 
-if Sinatra::Base.development?
+unless Sinatra::Base.production?
   # load local environment variables
   require 'dotenv'
   Dotenv.load 'config/local_vars.env'
 
-  require 'pry-byebug' if Sinatra::Base.development?
+  require 'pry-byebug'
 end
 
 require_relative 'lib/authentication'
