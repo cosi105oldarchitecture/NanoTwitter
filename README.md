@@ -12,7 +12,7 @@ NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
 ## Changes
 
-### 0.4 (3/13/19)
+### 0.4 (3/14/19)
 
 - DB optimizations: seed time & switch to database on Amazon RDS (Ari)
 - Implement dynamic version numbers in route URLs (Ari)
