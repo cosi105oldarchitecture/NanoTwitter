@@ -1,5 +1,7 @@
 # NanoTwitter
 
+[Production Deployment Here](https://nano-twitter.herokuapp.com/)
+
 [![Codeship Status for cosi105/NanoTwitter](https://app.codeship.com/projects/ec59bc70-1c93-0137-a172-0eda4e30ac77/status?branch=master)](https://app.codeship.com/projects/328870)
 
 Authors
@@ -12,7 +14,7 @@ NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
 ## Changes
 
-### 0.4 (3/13/19)
+### 0.4 (3/14/19)
 
 - DB optimizations: seed time & switch to database on Amazon RDS (Ari)
 - Implement dynamic version numbers in route URLs (Ari)
