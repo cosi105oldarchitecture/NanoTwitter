@@ -6,5 +6,6 @@
 
 .DS_Store
 .byebug_history
+coverage
 local_vars.env
 log

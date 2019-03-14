@@ -1,6 +1,10 @@
 # NanoTwitter
 
+[Production Deployment Here](https://nano-twitter.herokuapp.com/)
+
 [![Codeship Status for cosi105/NanoTwitter](https://app.codeship.com/projects/ec59bc70-1c93-0137-a172-0eda4e30ac77/status?branch=master)](https://app.codeship.com/projects/328870)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5156885903d76b6a4e64/maintainability)](https://codeclimate.com/github/cosi105/NanoTwitter/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5156885903d76b6a4e64/test_coverage)](https://codeclimate.com/github/cosi105/NanoTwitter/test_coverage)
 
 Authors
 
@@ -19,6 +23,7 @@ NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 - Implement test interface & seed_helper (Yang)
 - Implement version 1 of UI (Brad)
 - Set up Heroku add-on compatibility (Ari)
+- Add Code Climate and test coverage (Ari)
 
 ### 0.3 (3/7/19)
 

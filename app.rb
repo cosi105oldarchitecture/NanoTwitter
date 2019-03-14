@@ -165,8 +165,8 @@ post '/test/reset' do
   seed_users(users.to_i)
   seed_follows(users.to_i)
   seed_tweets(tweets.to_i)
-  
-  
+
+
   seed_testuser
 end
 
@@ -180,17 +180,13 @@ post '/test/user/:userid/tweets' do
 end
 
 
-# One page “report”:
+# One page "report":
 # How many users, follows, and tweets are there
-# What is the TestUser’s id
+# What is the TestUser's id
 get '/test/status' do
-  @users_num = User.count,
-  @follow_num = Follow.count,
-  @tweet_num = Tweet.count,
+  @users_num = User.count
+  @follow_num = Follow.count
+  @tweet_num = Tweet.count
   @testuser_id = User.find_by(name: 'testuser').id
   erb :report
 end
-
-
-
-
