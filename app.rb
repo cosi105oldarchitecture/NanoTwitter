@@ -5,6 +5,8 @@ require 'activerecord-import'
 require 'sinatra/flash'
 require 'bcrypt'
 require 'newrelic_rpm'
+require 'rake'
+Dir.glob('rake/*.rake').each { |r| load r }
 
 unless Sinatra::Base.production?
   # load local environment variables

@@ -3,6 +3,7 @@
 # that purges the database and creates fixtures before every test
 
 ENV['APP_ENV'] = 'test'
+ENV['PGDATABASE'] = 'ntwitter_test'
 require 'simplecov'
 SimpleCov.start
 require 'minitest/autorun'
@@ -19,7 +20,7 @@ end
 
 describe 'NanoTwitter' do
   before do
-    ActiveRecord::Base.subclasses.each(&:destroy_all)
+    delete_all
     names = %w[ari brad yang pito]
     users = names.map { |s| User.create(name: s.capitalize, handle: "@#{s}", password: "#{s}123") }
     @ari, @brad, @yang, @pito = users

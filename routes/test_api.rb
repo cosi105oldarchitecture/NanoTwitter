@@ -3,22 +3,20 @@ require 'faker'
 
 post '/test/reset/all' do
   delete_all
-  seed_users(nil)
-  seed_follows(nil)
-  seed_tweets(nil)
-  seed_testuser
+  Rake::Task['db:dump:seed'].execute
+  status 200
 end
 
 post '/test/reset' do
   users = params[:users]
   tweets = params[:tweets]
   delete_all
+
   seed_users(users.to_i)
   seed_follows(users.to_i)
   seed_tweets(tweets.to_i)
-
-
   seed_testuser
+  status 200
 end
 
 post '/test/user/:userid/tweets' do
@@ -28,8 +26,8 @@ post '/test/user/:userid/tweets' do
     t = Faker::Twitter.status
     Tweet.create(author_id: userid.to_i, body: t["text"], created_on: t["created_at"])
   end
+  status 200
 end
-
 
 # One page "report":
 # How many users, follows, and tweets are there

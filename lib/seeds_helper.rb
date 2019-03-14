@@ -3,8 +3,6 @@ def get_csv(model)
 end
 
 require 'csv'
-Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
-
 def seed_users(count)
   user_rows = get_csv('users')
   i = 0
@@ -20,10 +18,12 @@ def seed_follows(count)
   follow_rows = get_csv('follows')
   i = 0
   total = count || follow_rows.count
+  user_count = User.count
   follow_rows.each do |row|
     unless count.nil?
-      break if row[0].to_i > count
-      next if row[1].to_i > count
+      break if i == count
+      break if row[0].to_i > user_count
+      next if row[1].to_i > user_count
     end
     Follow.new(follower_id: row[0], followee_id: row[1]).save(validate: false)
     puts "Follow #{i += 1} / #{total}"
@@ -34,8 +34,9 @@ def seed_tweets(count)
   tweet_rows = get_csv('tweets')
   i = 0
   total = count || tweet_rows.count
+  user_count = User.count
   tweet_rows.each do |row|
-    break if i == count
+    break if i == count || row[0].to_i > user_count
     Tweet.new(author_id: row[0], body: row[1], created_on: DateTime.strptime(row[2], '%Y-%m-%d %H:%M:%S %z')).save(validate: false)
     puts "Tweet #{i += 1} / #{total}"
   end
@@ -47,7 +48,5 @@ def seed_testuser
 end
 
 def delete_all
-  User.delete_all
-  Follow.delete_all
-  Tweet.delete_all
+  ActiveRecord::Base.subclasses.each(&:delete_all)
 end
