@@ -42,7 +42,7 @@ def seed_tweets(count)
 end
 
 def seed_testuser
-  User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
+  User.create(id: (User.last.id || 0) + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
 end
 
 def delete_all
