@@ -11,7 +11,7 @@ def seed_users(count)
   total = count || user_rows.count
   user_rows.each do |row|
     break if i == count
-    User.create(id: row[0], name: row[1], handle: "@#{row[1] << row[0]}".downcase, password: "@#{row[1] << row[0]}".downcase)
+    User.new(id: row[0], name: row[1], handle: "@#{row[1] << row[0]}".downcase, password: "@#{row[1] << row[0]}".downcase).save(validate: false)
     puts "User #{i += 1} / #{total}"
   end
 end
@@ -25,7 +25,7 @@ def seed_follows(count)
       break if row[0].to_i > count
       next if row[1].to_i > count
     end
-    Follow.create(follower_id: row[0], followee_id: row[1])
+    Follow.new(follower_id: row[0], followee_id: row[1]).save(validate: false)
     puts "Follow #{i += 1} / #{total}"
   end
 end
@@ -36,13 +36,13 @@ def seed_tweets(count)
   total = count || tweet_rows.count
   tweet_rows.each do |row|
     break if i == count
-    Tweet.create(author_id: row[0], body: row[1], created_on: DateTime.strptime(row[2], '%Y-%m-%d %H:%M:%S %z'))
+    Tweet.new(author_id: row[0], body: row[1], created_on: DateTime.strptime(row[2], '%Y-%m-%d %H:%M:%S %z')).save(validate: false)
     puts "Tweet #{i += 1} / #{total}"
   end
 end
 
 def seed_testuser
-  User.create(id: User.count + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
+  User.create(name: 'testuser', handle: 'testuser@sample.com', password: 'password')
 end
 
 def delete_all
