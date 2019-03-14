@@ -23,6 +23,7 @@ NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 - Implement test interface & seed_helper (Yang)
 - Implement version 1 of UI (Brad)
 - Set up Heroku add-on compatibility (Ari)
+- Add Code Climate and test coverage (Ari)
 
 ### 0.3 (3/7/19)
 
