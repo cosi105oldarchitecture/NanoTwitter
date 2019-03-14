@@ -11,6 +11,10 @@ require_relative '../app'
 # Define file path pattern for identifying test files:
 test_pattern = 'test/*/*_test.rb'
 
+def app
+  Sinatra::Application
+end
+
 describe 'NanoTwitter' do
   before do
     ActiveRecord::Base.subclasses.each(&:destroy_all)

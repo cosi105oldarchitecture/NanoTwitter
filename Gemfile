@@ -10,6 +10,8 @@ gem 'rake'
 gem 'sinatra'
 gem 'sinatra-activerecord'
 gem 'sinatra-flash'
+gem 'minitest'
+gem 'rails_helper'
 
 group :development do
   gem 'pry-byebug'
