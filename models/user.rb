@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
   # A convenient method for following a user
   def follow(followee)
     Follow.create(follower_id: id, followee_id: followee.id)
+    columns = %i[timeline_owner_id tweet_id]
+    pieces = []
+    followee.tweets.each { |t| pieces << [id, t.id] }
+    TimelinePiece.import columns, pieces
   end
 
   def self.digest(string)

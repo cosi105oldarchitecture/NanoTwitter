@@ -11,6 +11,8 @@ gem 'sinatra'
 gem 'sinatra-activerecord'
 gem 'sinatra-flash'
 gem 'dotenv'
+gem 'activerecord-import'
+gem 'newrelic_rpm'
 
 group :development do
   gem 'pry-byebug'
