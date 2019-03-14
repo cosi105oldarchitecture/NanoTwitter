@@ -6,3 +6,5 @@
 
 .DS_Store
 .byebug_history
+local_vars.env
+log

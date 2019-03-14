@@ -1,19 +1,29 @@
+require 'bcrypt'
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'activerecord-import'
 require 'sinatra/flash'
 require 'yaml'
 require 'bcrypt'
+require 'faker'
+require 'newrelic_rpm'
 
-# Byebug will be conveniently accessible in dev but throw
-# an error if we accidentally deploy with a breakpoint
-require 'pry-byebug' if Sinatra::Base.development?
+unless Sinatra::Base.production?
+  # load local environment variables
+  require 'dotenv'
+  Dotenv.load 'config/local_vars.env'
+
+  require 'pry-byebug'
+end
 
 require_relative 'lib/authentication'
 require_relative 'lib/register'
 require_relative 'lib/helpers'
+require_relative 'version'
+require_relative 'lib/seeds_helper'
+
 
 ENV['APP_ROOT'] = settings.root
-
 Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
 
 # Expire sessions after ten minutes of inactivity
@@ -21,18 +31,20 @@ TEN_MINUTES = 60 * 10
 use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
 
+API_PATH = "/api/#{NanoTwitter::VERSION}"
+
 get '/' do
-  erb :main
+  erb :landing_page, layout: false
 end
 
 get '/login' do
-  erb :login
+  erb :login, layout: false
 end
 
 post '/login' do
   if user = Register.authenticate(params)
     session[:user] = user
-    redirect '/users'
+    redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
     redirect '/login'
@@ -46,7 +58,7 @@ post '/logout' do
 end
 
 get '/register' do
-  erb :register
+  erb :register, layout: false
 end
 
 post '/register' do
@@ -62,23 +74,28 @@ post '/register' do
   end
 end
 
-get '/users' do
-  authenticate!
+get '/users/profile' do
   @user = session[:user]
-  erb :users
+  erb :profile
 end
+
+# get '/users' do
+#   authenticate!
+#   @user = session[:user]
+#   erb :users
+# end
 
 get '/users/followers' do
   authenticate!
-  @user = session[:user]
-  @followers = Follow.where(followee_id: @user.id)
+  user = session[:user]
+  @followers = user.followers
   erb :user_follower
 end
 
 get '/users/following' do
   authenticate!
-  @user = session[:user]
-  @following = Follow.where(follower_id: @user.id)
+  user = session[:user]
+  @followees = user.followees
   erb :user_following
 end
 
@@ -94,9 +111,6 @@ end
 get '/users/unfollowing' do
   authenticate!
   user = session[:user]
-  # @users = User.where.not(id: user.id)
-  # following = Follow.where(follower_id: user.id)
-  # followees = user.followees.pluck(:id)
   @users = User.all - user.followees
   erb :unfollowing
 end
@@ -104,7 +118,6 @@ end
 # add this to routes if this need to be protected.
 get '/protected' do
   authenticate!
-  'Welcome back!'
 end
 
 # Page for composing/posting new tweet.
@@ -114,13 +127,12 @@ get '/tweets/new' do
 end
 
 # API endpoint for creating/posting a new tweet.
-  # Replace "v1" with global variable
   # Pass session token as parameter
   # Use session token to get author_id
   # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
   # Add error handling
   # Check that user is logged in
-post '/api/v1/tweets/new' do
+post "#{API_PATH}/tweets/new" do
   authenticate!
   author_id = session[:user].id
   tweet_body = params[:tweet][:body]
@@ -133,5 +145,52 @@ end
 get '/tweets' do
   authenticate!
   user = User.find(session[:user].id)
-  # erb :tweets
+  # user = User.find(1000) #REMOVE
+  @timeline = user.timeline_tweets
+  erb :tweets
 end
+
+post '/test/reset/all' do
+  delete_all
+  seed_users(nil)
+  seed_follows(nil)
+  seed_tweets(nil)
+  seed_testuser
+end
+
+post '/test/reset' do
+  users = params[:users]
+  tweets = params[:tweets]
+  delete_all
+  seed_users(users.to_i)
+  seed_follows(users.to_i)
+  seed_tweets(tweets.to_i)
+  
+  
+  seed_testuser
+end
+
+post '/test/user/:userid/tweets' do
+  userid = params[:userid]
+  n = params[:count].to_i
+  (0..n-1).each do |i|
+    t = Faker::Twitter.status
+    Tweet.create(author_id: userid.to_i, body: t["text"], created_on: t["created_at"])
+  end
+end
+
+
+# One page “report”:
+# How many users, follows, and tweets are there
+# What is the TestUser’s id
+get '/test/status' do
+  @users_num = User.count,
+  @follow_num = Follow.count,
+  @tweet_num = Tweet.count,
+  @testuser_id = User.find_by(name: 'testuser').id
+  erb :report
+end
+
+
+
+
