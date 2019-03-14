@@ -3,6 +3,8 @@
 # that purges the database and creates fixtures before every test
 
 ENV['APP_ENV'] = 'test'
+require 'simplecov'
+SimpleCov.start
 require 'minitest/autorun'
 require 'rack/test'
 require 'faker'
