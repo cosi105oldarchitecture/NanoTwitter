@@ -1,7 +1,7 @@
 namespace :db do
   desc 'Creates a SQL dump file from the database'
   task :dump do
-    system "#{ENV['CREATE_DUMP']} #{ENV['PG_DUMP_FILE']} #{ENV['PGDATABASE']}"
+    system "pg_dump #{ENV['PG_HOST']} -f #{ENV['PG_DUMP_FILE']}"
     puts 'Created SQL dump.'
   end
 
