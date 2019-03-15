@@ -1,11 +1,5 @@
 
 class Register
-  attr_reader :name # Should change this to :handle for clarity
-
-  def initialize(handle)
-    @name = handle.capitalize
-  end
-
   def self.authenticate(params = {})
     return nil if params[:handle].blank? || params[:password].blank?
     handle = params[:handle].downcase

@@ -22,4 +22,9 @@ describe 'User model' do
     fake_ari.save.must_equal false
   end
 
+  it 'can authenticate a user' do
+    @ari.authenticate('ari123').must_equal @ari
+    @ari.authenticate('iforgetmypassword').must_equal false
+  end
+
 end

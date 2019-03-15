@@ -23,11 +23,6 @@ def parse_tweet(tweet_body)
   }
 end
 
-# Add new tweet to each follower's timeline
-def set_timelines(tweet)
-  tweet.author.followers.each { |follower| follower.timeline_tweets << tweet }
-end
-
 # Represents in db any hashtags extracted from tweet
 def set_hashtags(tweet, hashtags)
   hashtags.each do |tag_text|

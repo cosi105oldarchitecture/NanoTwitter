@@ -9,6 +9,7 @@ require 'minitest/autorun'
 require 'rack/test'
 require 'faker'
 require_relative '../app'
+ENV['PGDATABASE'] = ActiveRecord::Base.subclasses.first.connection.current_database
 
 # Define file path pattern for identifying test files:
 test_pattern = 'test/*/*_test.rb'
@@ -18,8 +19,9 @@ def app
 end
 
 describe 'NanoTwitter' do
+  include Rack::Test::Methods
   before do
-    ActiveRecord::Base.subclasses.each(&:destroy_all)
+    delete_all
     names = %w[ari brad yang pito]
     users = names.map { |s| User.create(name: s.capitalize, handle: "@#{s}", password: "#{s}123") }
     @ari, @brad, @yang, @pito = users

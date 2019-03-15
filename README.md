@@ -1,6 +1,6 @@
 # NanoTwitter
 
-[Production Deployment Here](https://nano-twitter.herokuapp.com/)
+Production deployment: https://nano-twitter.herokuapp.com/
 
 [![Codeship Status for cosi105/NanoTwitter](https://app.codeship.com/projects/ec59bc70-1c93-0137-a172-0eda4e30ac77/status?branch=master)](https://app.codeship.com/projects/328870)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5156885903d76b6a4e64/maintainability)](https://codeclimate.com/github/cosi105/NanoTwitter/maintainability)

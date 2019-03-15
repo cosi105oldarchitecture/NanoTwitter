@@ -1,8 +1,14 @@
 module Authentication
-  def authenticate!
+  def authenticate
     unless session[:user]
-      # session[:original_request] = request.path_info
-      redirect '/'
+      status 401
+      false
+    else
+      true
     end
+  end
+
+  def authenticate_or_home!
+    redirect '/' unless authenticate
   end
 end

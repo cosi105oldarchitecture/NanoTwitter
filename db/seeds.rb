@@ -29,21 +29,3 @@ mapped_timeline_piece_rows = timeline_piece_rows.map { |row| { timeline_owner_id
 [[mapped_user_rows, User], [mapped_tweet_rows, Tweet], [mapped_follow_rows, Follow], [mapped_timeline_piece_rows, TimelinePiece]].each { |arr| load_seed(arr[0], arr[1]) }
 
 User.create(id: User.last.id + 1, name: 'testuser', handle: 'testuser@sample.com', password: 'password')
-<<<<<<< HEAD
-
-Tweet.all.each { |t| set_timelines(t) }
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> 6f940123419fbbd4a37098be44b493f05aa31687
