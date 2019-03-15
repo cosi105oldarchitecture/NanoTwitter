@@ -33,9 +33,6 @@ end
 # How many users, follows, and tweets are there
 # What is the TestUser's id
 get '/test/status' do
-  @user_num = User.count
-  @follow_num = Follow.count
-  @tweet_num = Tweet.count
-  @testuser_id = User.find_by(name: 'testuser').id
+  load_status
   erb :report
 end

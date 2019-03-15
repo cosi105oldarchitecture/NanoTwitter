@@ -29,3 +29,14 @@ describe 'POST /test/user/:userid/tweets' do
     Tweet.count.must_equal(40)
   end
 end
+
+describe 'Test status report' do
+  it 'Can get data about the state of the app' do
+    post '/test/reset/all'
+    load_status
+    @user_num.must_equal User.count
+    @follow_num.must_equal Follow.count
+    @tweet_num.must_equal Tweet.count
+    @testuser_id.must_equal User.find_by(handle: 'testuser@sample.com').id
+  end
+end
