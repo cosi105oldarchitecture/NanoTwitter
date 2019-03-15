@@ -19,6 +19,7 @@ def app
 end
 
 describe 'NanoTwitter' do
+  include Rack::Test::Methods
   before do
     delete_all
     names = %w[ari brad yang pito]

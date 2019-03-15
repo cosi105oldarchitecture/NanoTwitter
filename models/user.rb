@@ -25,10 +25,4 @@ class User < ActiveRecord::Base
     followee.tweets.each { |t| pieces << [id, t.id] }
     TimelinePiece.import columns, pieces
   end
-
-  def self.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
-                                                  BCrypt::Engine.cost
-    BCrypt::Password.create(string, cost: cost)
-  end
 end

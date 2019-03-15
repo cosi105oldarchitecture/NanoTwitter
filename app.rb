@@ -16,21 +16,18 @@ unless Sinatra::Base.production?
   require 'pry-byebug'
 end
 
-require_relative 'lib/authentication'
-require_relative 'lib/register'
-require_relative 'lib/helpers'
 require_relative 'version'
 
 ENV['APP_ROOT'] = settings.root
-Dir["#{ENV['APP_ROOT']}/models/*.rb"].each { |file| require file }
-Dir["#{ENV['APP_ROOT']}/routes/*.rb"].each { |file| require file }
+API_PATH = "/api/#{NanoTwitter::VERSION}"
+%w[models lib routes].each do |s|
+  Dir["#{ENV['APP_ROOT']}/#{s}/*.rb"].each { |file| require file }
+end
 
 # Expire sessions after ten minutes of inactivity
 TEN_MINUTES = 60 * 10
 use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
-
-API_PATH = "/api/#{NanoTwitter::VERSION}"
 
 get '/' do
   erb :landing_page, layout: false
@@ -41,8 +38,7 @@ get '/login' do
 end
 
 post '/login' do
-  if user = Register.authenticate(params)
-    session[:user] = user
+  if login(params)
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -61,45 +57,38 @@ get '/register' do
 end
 
 post '/register' do
-  if params[:handle].blank? || params[:password].blank?
+  user = register_user(params)
+  if user.nil?
     flash[:notice] = 'invalid handle or password, please input again!'
     redirect '/register'
   else
-    handle = params[:handle].downcase
-    password = params[:password]
-    user = User.create(name: params[:name], handle: handle, password: password)
     session[:user] = user
     redirect '/login'
   end
 end
 
 get '/users/profile' do
+  authenticate_or_home!
   @user = session[:user]
   erb :profile
 end
 
-# get '/users' do
-#   authenticate!
-#   @user = session[:user]
-#   erb :users
-# end
-
 get '/users/followers' do
-  authenticate!
+  authenticate_or_home!
   user = session[:user]
   @followers = user.followers
   erb :user_follower
 end
 
 get '/users/following' do
-  authenticate!
+  authenticate_or_home!
   user = session[:user]
   @followees = user.followees
   erb :user_following
 end
 
 post '/users/following' do
-  authenticate!
+  authenticate_or_home!
   user = session[:user]
   followee = User.find_by(name: params[:name])
   Follow.create(follower_id: user.id, followee_id: followee.id)
@@ -108,7 +97,7 @@ post '/users/following' do
 end
 
 get '/users/unfollowing' do
-  authenticate!
+  authenticate_or_home!
   user = session[:user]
   @users = User.all - user.followees
   erb :unfollowing
@@ -116,33 +105,19 @@ end
 
 # add this to routes if this need to be protected.
 get '/protected' do
-  authenticate!
+  authenticate_or_home!
 end
 
 # Page for composing/posting new tweet.
 get '/tweets/new' do
-  authenticate!
+  authenticate_or_home!
   erb :new_tweet
-end
-
-# API endpoint for creating/posting a new tweet.
-  # Pass session token as parameter
-  # Use session token to get author_id
-  # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
-  # Add error handling
-  # Check that user is logged in
-post "#{API_PATH}/tweets/new" do
-  authenticate!
-  author_id = session[:user].id
-  tweet_body = params[:tweet][:body]
-  puts set_new_tweet(author_id, tweet_body).to_json
-  # redirect(:tweets)
 end
 
 # Lists user's followed tweets.
   # Get timeline pieces
 get '/tweets' do
-  authenticate!
+  authenticate_or_home!
   user = User.find(session[:user].id)
   # user = User.find(1000) #REMOVE
   @timeline = user.timeline_tweets
