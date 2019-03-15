@@ -20,11 +20,8 @@ def seed_follows(count)
   total = count || follow_rows.count
   user_count = User.count
   follow_rows.each do |row|
-    unless count.nil?
-      break if i == count
-      break if row[0].to_i > user_count
-      next if row[1].to_i > user_count
-    end
+    break if i == count || row[0].to_i > user_count
+    next if row[1].to_i > user_count
     Follow.new(follower_id: row[0], followee_id: row[1]).save(validate: false)
     puts "Follow #{i += 1} / #{total}"
   end
