@@ -1,10 +1,9 @@
 require 'bcrypt'
 require 'sinatra'
-require 'sinatra/activerecord'
-require 'activerecord-import'
 require 'sinatra/flash'
 require 'bcrypt'
 require 'newrelic_rpm'
+require 'nt_models'
 require 'rake'
 Dir.glob('rake/*.rake').each { |r| load r }
 
