@@ -1,5 +1,4 @@
 require_relative '../lib/seeds_helper'
-require 'faker'
 
 post '/test/reset/all' do
   delete_all

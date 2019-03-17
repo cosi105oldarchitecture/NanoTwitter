@@ -1,10 +1,5 @@
-require 'bcrypt'
-require 'sinatra'
-require 'sinatra/flash'
-require 'bcrypt'
-require 'newrelic_rpm'
-require 'nt_models'
-require 'rake'
+require 'bundler'
+Bundler.require
 Dir.glob('rake/*.rake').each { |r| load r }
 
 unless Sinatra::Base.production?
