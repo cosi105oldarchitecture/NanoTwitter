@@ -6,8 +6,6 @@ ENV['APP_ENV'] = 'test'
 require 'simplecov'
 SimpleCov.start
 require 'minitest/autorun'
-require 'rack/test'
-require 'faker'
 require_relative '../app'
 ENV['PGDATABASE'] = ActiveRecord::Base.subclasses.first.connection.current_database
 
