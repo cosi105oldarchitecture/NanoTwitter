@@ -17,6 +17,7 @@ gem 'rails_helper'
 gem 'dotenv'
 gem 'newrelic_rpm'
 gem 'simplecov'
+gem 'thin'
 
 group :development do
   gem 'pry-byebug'
