@@ -1,5 +1,5 @@
 <h1>Compose a new Tweet</h1>
-<form action="/api/v1/tweets/new" method="post">
+<form action="<%= @path %>" method="post">
   <div>
     <textarea id="body" name="tweet[body]" required="true" rows="5" colums="50"></textarea>
   </div>

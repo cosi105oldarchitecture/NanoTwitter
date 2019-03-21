@@ -14,7 +14,47 @@ Authors
 
 NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
+## How to make sense of this mess
+
+As of now (v0.5, 3/21/19), our NanoTwitter is comprised of two Sinatra apps plus a custom-made Ruby gem. Here are the pieces you'll need to understand in order to run our app:
+
+### nt_models
+
+[nt_models](https://github.com/cosi105/nt_models) is a gem we created, hosted on [RubyGems](https://rubygems.org/gems/nt_models), to hold the source code for our database migrations and their associated ActiveRecord models. We set this up so that we could create multiple Sinatra apps that, along with sharing the same database, also DRYly have the exact same model files. Both NanoTwitter and YourBiggestFanout utilize nt_models to manage their schema.
+
+### NanoTwitter
+
+This is the main app, providing a UI and an API for Twitter-like functionality including posts, follows, and timelines.
+
+### YourBiggestFanout
+
+[YourBiggestFanout](https://github.com/cosi105/YourBiggestFanout) is a microservice we created to asynchronously handle the write-intensive task of distributing tweets to followers' timelines, both in the case where a user newly follows another user (and thus needs to receive all of that user's tweets) and the case where a user with followers posts a tweet.
+
+## How to use this mess
+
+### Testing
+
+Each of these repos has its own test suite that doesn't depend on any configuration of the other files. You can navigate to the root directory of any of these repos and run `rake test` to launch our test suites.
+
+### Running the apps
+
+Having a fully-functioning NanoTwitter including tweet fanout functionality requires you to have both NanoTwitter and YourBiggestFanout. To do this, you'll need to do the following:
+
+- Download both NanoTwitter and YourBiggestFanout.
+- Run `bundle install` on both apps.
+- Run `rake db:drop db:create` on either one of the apps.
+- Run `rake db:migrate` on both apps.
+- Run `ruby app.rb` on both apps. YourBiggestFanout should launch on port 9494, and NanoTwitter should launch on port 4567.
+
 ## Changes
+
+### 0.5 (3/21/19)
+
+- Investigate GraphQL (Yang)
+- Move models and migrations to gem, to be shared in multiple repos (Ari)
+- Offload "tweet fanout" functionality to microservice (Ari)
+- Run tests with Loader.io and New Relic (Brad)
+- Revise schema for denormalization (Brad)
 
 ### 0.4 (3/14/19)
 
