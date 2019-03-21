@@ -1,7 +1,8 @@
 <ol>
   <% @timeline.each do |tweet| %>
     <li>
-      <%= tweet.body %>
+      "<%= tweet.body %>"
+      <%# - <%= tweet.tweet_author_handle %> %>
     </li>
   <% end %>
 </ol>

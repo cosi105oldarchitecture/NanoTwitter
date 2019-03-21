@@ -77,7 +77,7 @@ end
 get '/users/following' do
   authenticate_or_home!
   user = session[:user]
-  @followees = user.followees
+  @followees = user.follows_from_me
   erb :user_following
 end
 

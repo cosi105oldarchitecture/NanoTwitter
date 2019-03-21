@@ -22,7 +22,14 @@ def seed_follows(count)
   follow_rows.each do |row|
     break if i == count || row[0].to_i > user_count
     next if row[1].to_i > user_count
-    Follow.new(follower_id: row[0], followee_id: row[1]).save(validate: false)
+    follower = User.find(row[0])
+    followee = User.find(row[1])
+    Follow.new(
+      follower_id: row[0],
+      followee_id: row[1],
+      follower_handle: follower.handle,
+      followee_handle: followee.handle
+    ).save(validate: false)
     puts "Follow #{i += 1} / #{total}"
   end
 end
@@ -34,7 +41,13 @@ def seed_tweets(count)
   user_count = User.count
   tweet_rows.each do |row|
     break if i == count || row[0].to_i > user_count
-    Tweet.new(author_id: row[0], body: row[1], created_on: DateTime.strptime(row[2], '%Y-%m-%d %H:%M:%S %z')).save(validate: false)
+    author = User.find(row[0])
+    Tweet.new(
+      author_id: row[0],
+      body: row[1],
+      created_on: DateTime.strptime(row[2],'%Y-%m-%d %H:%M:%S %z'),
+      author_handle: author.handle
+    ).save(validate: false)
     puts "Tweet #{i += 1} / #{total}"
   end
 end
