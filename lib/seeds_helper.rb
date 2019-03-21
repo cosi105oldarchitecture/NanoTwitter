@@ -1,5 +1,5 @@
 def get_csv(model)
-  CSV.read("#{ENV['APP_ROOT']}/db/seed_files/#{model}.csv")
+  CSV.read(open("#{ENV['CSV_GIST_ROOT']}#{model}.csv"))
 end
 
 require 'csv'
