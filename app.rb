@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.require
+require 'open-uri'
 Dir.glob('rake/*.rake').each { |r| load r }
 
 unless Sinatra::Base.production?
