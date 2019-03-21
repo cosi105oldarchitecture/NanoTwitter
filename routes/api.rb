@@ -18,7 +18,7 @@ post "#{API_PATH}/tweets/new" do
   end
 end
 
-# Return to timeline after posting new tweet.
-after "#{API_PATH}/tweets/new" do
-  redirect('/tweets')
-end
+# # Return to timeline after posting new tweet.
+# after "#{API_PATH}/tweets/new" do
+#   redirect('/tweets')
+# end

@@ -3,7 +3,12 @@
 # Adds tweet & associated records to db.
 def set_new_tweet(author_id, author_handle, tweet_body)
   unless tweet_body.nil?
-    new_tweet = Tweet.create(author_id: author_id, author_handle: author_handle, body: tweet_body, created_on: DateTime.now)
+    new_tweet = Tweet.create(
+      author_id: author_id,
+      author_handle: author_handle,
+      body: tweet_body,
+      created_on: DateTime.now
+    )
     parsed_tweet = parse_tweet(tweet_body)
     set_hashtags(new_tweet, parsed_tweet[:hashtags])
     set_mentions(new_tweet, parsed_tweet[:mentions])
