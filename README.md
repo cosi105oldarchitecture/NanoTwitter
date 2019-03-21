@@ -30,7 +30,21 @@ This is the main app, providing a UI and an API for Twitter-like functionality i
 
 [YourBiggestFanout](https://github.com/cosi105/YourBiggestFanout) is a microservice we created to asynchronously handle the write-intensive task of distributing tweets to followers' timelines, both in the case where a user newly follows another user (and thus needs to receive all of that user's tweets) and the case where a user with followers posts a tweet.
 
-While NanoTwitter and YourBiggestFanout have test suites that don't depend on each other's existence, having a fully-functioning NanoTwitter including tweet fanout functionality requires you to have both apps. To do this, you'll need to download both NanoTwitter and YourBiggestFanout, then run `bundle install` on both of them, followed by `ruby app.rb` on both apps.
+## How to use this mess
+
+### Testing
+
+Each of these repos has its own test suite that doesn't depend on any configuration of the other files. You can navigate to the root directory of any of these repos and run `rake test` to launch our test suites.
+
+### Running the apps
+
+Having a fully-functioning NanoTwitter including tweet fanout functionality requires you to have both NanoTwitter and YourBiggestFanout. To do this, you'll need to do the following:
+
+- Download both NanoTwitter and YourBiggestFanout.
+- Run `bundle install` on both apps.
+- Run `rake db:drop db:create` on either one of the apps.
+- Run `rake db:migrate` on both apps.
+- Run `ruby app.rb` on both apps. YourBiggestFanout should launch on port 9494, and NanoTwitter should launch on port 4567.
 
 ## Changes
 
