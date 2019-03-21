@@ -14,7 +14,33 @@ Authors
 
 NanoTwitter is a light version of Twitter, implemented in Ruby with Sinatra.
 
+## How to make sense of this mess
+
+As of now (v0.5, 3/21/19), our NanoTwitter is comprised of two Sinatra apps plus a custom-made Ruby gem. Here are the pieces you'll need to understand in order to run our app:
+
+### nt_models
+
+[nt_models](https://github.com/cosi105/nt_models) is a gem we created, hosted on [RubyGems](https://rubygems.org/gems/nt_models), to hold the source code for our database migrations and their associated ActiveRecord models. We set this up so that we could create multiple Sinatra apps that, along with sharing the same database, also DRYly have the exact same model files. Both NanoTwitter and YourBiggestFanout utilize nt_models to manage their schema.
+
+### NanoTwitter
+
+This is the main app, providing a UI and an API for Twitter-like functionality including posts, follows, and timelines.
+
+### YourBiggestFanout
+
+[YourBiggestFanout](https://github.com/cosi105/YourBiggestFanout) is a microservice we created to asynchronously handle the write-intensive task of distributing tweets to followers' timelines, both in the case where a user newly follows another user (and thus needs to receive all of that user's tweets) and the case where a user with followers posts a tweet.
+
+While NanoTwitter and YourBiggestFanout have test suites that don't depend on each other's existence, having a fully-functioning NanoTwitter including tweet fanout functionality requires you to have both apps. To do this, you'll need to download both NanoTwitter and YourBiggestFanout, then run `bundle install` on both of them, followed by `ruby app.rb` on both apps.
+
 ## Changes
+
+### 0.5 (3/21/19)
+
+- Investigate GraphQL (Yang)
+- Move models and migrations to gem, to be shared in multiple repos (Ari)
+- Offload "tweet fanout" functionality to microservice (Ari)
+- Run tests with Loader.io and New Relic (Brad)
+- Revise schema for denormalization (Brad)
 
 ### 0.4 (3/14/19)
 
