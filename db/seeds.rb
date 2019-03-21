@@ -1,6 +1,6 @@
 # NOTE: This is for the original/normalized CSV files
 def get_csv(model)
-  CSV.read("#{ENV['APP_ROOT']}/db/seed_files/normalized/#{model}.csv")
+  CSV.read(open("#{ENV['CSV_GIST_ROOT_NORMALIZED']}#{model}.csv"))
 end
 
 def load_seed(model_params, model_class)

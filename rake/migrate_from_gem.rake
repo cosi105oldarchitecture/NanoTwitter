@@ -3,7 +3,7 @@ namespace :db do
   task :copy_gem_migrations do
     migrate_dir = 'db/migrate'
     FileUtils.remove_dir(migrate_dir) if File.directory?(migrate_dir)
-    FileUtils.mkdir(migrate_dir)
+    FileUtils.mkdir_p(migrate_dir)
     FileUtils.copy_entry("#{`gem path nt_models`.gsub("\n", ''
 )}/#{migrate_dir}", migrate_dir)
   end
