@@ -9,7 +9,10 @@ namespace :db do
   namespace :dump do
     desc 'Loads the database from a SQL dump file'
     task seed: ['db:drop', 'db:create', 'db:migrate'] do
+      puts 'Downloading SQL data...'
       sql_file = open(ENV['SQL_DUMP_URL'])
+      puts 'Downloaded SQL data!'
+      puts 'Loading seed database...'
       system "psql -f #{sql_file.path} #{ENV['PG_HOST']}"
       ActiveRecord::Base.connection.tables.each do |t|
         ActiveRecord::Base.connection.reset_pk_sequence!(t)
