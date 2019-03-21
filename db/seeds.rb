@@ -21,12 +21,14 @@ timeline_piece_rows = get_csv('timeline_pieces')
 
 handle_map = {}
 mapped_user_rows = user_rows.map do |row|
-  handle_map[row[0].to_sym] = "@#{row[1] << row[0]}".downcase
+  id = row[0]
+  name = row[1]
+  handle_map[row[0].to_sym] = "@#{name}#{id}".downcase
   {
-    id: row[0],
-    name: row[1],
-    handle: "@#{row[1] << row[0]}".downcase,
-    password: "@#{row[1] << row[0]}".downcase
+    id: id,
+    name: name,
+    handle: "@#{name}#{id}".downcase,
+    password: "@#{name}#{id}".downcase
   }
 end
 
