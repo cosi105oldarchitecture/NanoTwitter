@@ -1,7 +1,7 @@
 <ol>
-  <% @followees.each do |user| %>
+  <% @followees.each do |f| %>
     <li>
-      <%= user.handle %>
+      <%= f.followee_handle %>
     </li>
   <% end %>
 </ol>

@@ -7,16 +7,18 @@ post "#{API_PATH}/signup" do
 end
 
 # API endpoint for creating/posting a new tweet.
-  # Pass session token as parameter
-  # Use session token to get author_id
-  # Decide whether to continue server-side parsing tweet body to extract mentions & hashtags.
-  # Add error handling
-  # Check that user is logged in
 post "#{API_PATH}/tweets/new" do
   if authenticate
-    author_id = session[:user].id
-    tweet_body = params[:tweet][:body]
     status 201
-    set_new_tweet(author_id, tweet_body).to_json
+    set_new_tweet(
+      session[:user].id,
+      session[:user].handle,
+      params[:tweet][:body]
+    ).to_json
   end
 end
+
+# # Return to timeline after posting new tweet.
+# after "#{API_PATH}/tweets/new" do
+#   redirect('/tweets')
+# end

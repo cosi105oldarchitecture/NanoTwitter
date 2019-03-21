@@ -77,7 +77,7 @@ end
 get '/users/following' do
   authenticate_or_home!
   user = session[:user]
-  @followees = user.followees
+  @followees = user.follows_from_me
   erb :user_following
 end
 
@@ -105,6 +105,7 @@ end
 # Page for composing/posting new tweet.
 get '/tweets/new' do
   authenticate_or_home!
+  @path = "#{API_PATH}/tweets/new"
   erb :new_tweet
 end
 
@@ -113,7 +114,6 @@ end
 get '/tweets' do
   authenticate_or_home!
   user = User.find(session[:user].id)
-  # user = User.find(1000) #REMOVE
   @timeline = user.timeline_tweets
   erb :tweets
 end
