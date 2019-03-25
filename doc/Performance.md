@@ -13,6 +13,7 @@ Notable Changes
   - Indexed users, follows, tweets, timeline_pieces
 - `v0.4` --> `v0.5`
   - Denormalized timeline_pieces & tweet data
+  - Switched from Webrick to Thin
 
 | Version | Avg     | Min    | Max     | Successes | Errors |
 | ------: | ------: | -----: | ------: | --------: | -----: |
