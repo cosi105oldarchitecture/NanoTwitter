@@ -5,3 +5,20 @@
     </li>
   <% end %>
 </ol>
+
+<br/>
+
+{% if srpn * 10 <  count %}
+<form action="/tweets" name="next" method="get">
+  <input type="submit" value="Next">
+  <input type="hidden" name="pagenum" value="{{ pagenum + 1 }}" >
+</form>
+{% endif %}
+
+
+{% if srpn > 1 %}
+<form action="/tweets" name="back" method="get">
+  <input type="submit" value="Back">
+  <input type="hidden" name="pagenum" value="{{ pagenum - 1 }}" >
+</form>
+{% endif %}
