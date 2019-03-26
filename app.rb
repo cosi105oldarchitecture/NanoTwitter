@@ -113,8 +113,12 @@ end
 # Lists user's followed tweets.
   # Get timeline pieces
 get '/tweets' do
-  authenticate_or_home!
+  authenticate!
   user = User.find(session[:user].id)
+  # user = User.find(1000) #REMOVE
   @timeline = user.timeline_tweets
+  @count = @timeline.count
+  @pagenum = params[:pagenum]
+  @timeline_part = Array(@timeline).slice((@pagenum - 1)*10 + 1 , 10)
   erb :tweets
 end
