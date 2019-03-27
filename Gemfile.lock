@@ -39,7 +39,7 @@ GEM
     multi_xml (0.6.0)
     mustermann (1.0.3)
     newrelic_rpm (6.2.0.354)
-    nt_models (0.1.4.2)
+    nt_models (0.1.5)
       activerecord (= 5.2.2)
       bcrypt
       pg
@@ -103,7 +103,7 @@ DEPENDENCIES
   httparty
   minitest
   newrelic_rpm
-  nt_models (= 0.1.4.2)
+  nt_models (= 0.1.5)
   pg
   pry-byebug
   rack
