@@ -5,7 +5,7 @@
 Loader.io Tests:
 
 Test:  
-_Maintain Client Load: Login+Tweets (0-5/00:15)_
+_Maintain Client Load: Login+Tweets (0-30/00:15)_
 
 Notable Changes
 

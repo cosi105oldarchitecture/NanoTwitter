@@ -46,6 +46,18 @@ Having a fully-functioning NanoTwitter including tweet fanout functionality requ
 - Run `rake db:migrate` on both apps.
 - Run `ruby app.rb` on both apps. YourBiggestFanout should launch on port 9494, and NanoTwitter should launch on port 4567.
 
+### Seeding the database
+
+There are two ways to seed our app, based on how much data you want and how quickly you want the seeding to run. Both methods require you to download seed data from our GitHub gists, whose URLs are saved as environment variables (included in LATTE submissions).
+
+#### SQL Dump (recommended)
+
+By running `rake db:dump:seed`, you can quickly import the entire seed database by downloading and processing a series of SQL commands that will construct the data in the database directly, without the overhead of ActiveRecord.
+
+#### Test API (for granular control)
+
+By sending a POST request to `/test/reset`, with at least one of the parameters `users`, `tweets`, or `follows`, our app will download the seed data as CSVs and lazily import as many rows as required to meet the given constraints. Note that due to the overhead of parsing CSV files and initializing ActiveRecord models, this method is actually *slower* than the SQL dump even when less data is being seeded.
+
 ## Changes
 
 ### 0.5 (3/21/19)
@@ -53,7 +65,7 @@ Having a fully-functioning NanoTwitter including tweet fanout functionality requ
 - Investigate GraphQL (Yang)
 - Move models and migrations to gem, to be shared in multiple repos (Ari)
 - Offload "tweet fanout" functionality to microservice (Ari)
-- Run tests with Loader.io and New Relic (Brad)
+- Run tests with Loader.io and New Relic, and start lab notebook in doc folder (Brad)
 - Revise schema for denormalization (Brad)
 
 ### 0.4 (3/14/19)
