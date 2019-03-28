@@ -25,7 +25,6 @@ configure do
   uri = URI.parse(ENV['REDISTOGO_URL'])
   REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
 end
-
 # REDIS = Redis.new # Uncomment this when using a local Redis instance
 
 # Expire sessions after ten minutes of inactivity
@@ -43,15 +42,15 @@ def cache_timeline
     timeline_size = 0
     user.timeline_tweets.each do |tweet|
       REDIS.hmset(
-        "#{user.handle}:#{timeline_size += 1}", # Key of Redis hash
-        'id', tweet.id,                         # First key-value pair
+        "#{user.id}:#{timeline_size += 1}", # Key of Redis hash
+        'id', tweet.id,                     # First key-value pair
         'body', tweet.body,
         'created_on', tweet.created_on,
         'author_handle', tweet.author_handle
       )
     end
     # Stores number of Tweets in user's timeline
-    REDIS.set("#{user.handle}:timeline_size", timeline_size)
+    REDIS.set("#{user.id}:timeline_size", timeline_size)
     true
   end
 end
@@ -67,7 +66,7 @@ end
 post '/login' do
   if login(params)
     # If cache miss, load timeline into cache
-    cache_timeline unless REDIS.exists("#{session[:user].handle}:timeline_size")
+    cache_timeline unless REDIS.exists("#{session[:user].id}:timeline_size")
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -150,8 +149,8 @@ get '/tweets' do
   authenticate_or_home!
   @user = User.find(session[:user].id)
   # If cache miss, load timeline into cache
-  cache_timeline unless REDIS.exists("#{@user.handle}:timeline_size")
-  @total = REDIS.get("#{@user.handle}:timeline_size").to_i
+  cache_timeline unless REDIS.exists("#{@user.id}:timeline_size")
+  @total = REDIS.get("#{@user.id}:timeline_size").to_i
   @redis = REDIS
   erb :tweets
 end
