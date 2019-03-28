@@ -67,6 +67,7 @@ GEM
       rails_default_url_options (>= 1.0)
     rake (12.3.2)
     rb-readline (0.5.5)
+    redis (4.1.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -111,6 +112,7 @@ DEPENDENCIES
   rails_helper
   rake
   rb-readline
+  redis
   simplecov
   sinatra
   sinatra-flash
