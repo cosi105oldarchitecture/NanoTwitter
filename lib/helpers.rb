@@ -13,7 +13,7 @@ def set_new_tweet(author_id, author_handle, tweet_body)
     set_hashtags(new_tweet, parsed_tweet[:hashtags])
     set_mentions(new_tweet, parsed_tweet[:mentions])
   end
-  parsed_tweet
+  new_tweet
 end
 
 # Extracts mentions and hashtags from the body of a tweet

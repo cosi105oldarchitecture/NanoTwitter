@@ -56,9 +56,15 @@ By running `rake db:dump:seed`, you can quickly import the entire seed database 
 
 #### Test API (for granular control)
 
-By sending a POST request to `/test/reset`, with at least one of the parameters `users`, `tweets`, or `follows`, our app will download the seed data as CSVs and lazily import as many rows as required to meet the given constraints. Note that due to the overhead of parsing CSV files and initializing ActiveRecord models, this method is actually *slower* than the SQL dump even when less data is being seeded.
+By sending a POST request to `/test/reset`, with at least one of the parameters `users`, `tweets`, or `follows`, our app will download the seed data as CSVs and lazily import as many rows as required to meet the given constraints. Note that due to the overhead of parsing CSV files and initializing ActiveRecord models, this method is actually _slower_ than the SQL dump even when less data is being seeded.
 
 ## Changes
+
+### 0.6 (3/28/19)
+
+- Implement groundwork for timeline pagination (Yang)
+- Implement indexing (Ari)
+- Implement Redis (Brad)
 
 ### 0.5 (3/21/19)
 

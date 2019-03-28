@@ -1,7 +1,10 @@
+
 <ol>
-  <% @timeline.each do |tweet| %>
+  <% (1..@total).each do |num| %>
     <li>
-      "<%= tweet.body %>"
+      "<%= @redis.hget("#{@user.id}:#{num}", 'body') %>"
+      <br/>
+      - <%= @redis.hget("#{@user.id}:#{num}", 'author_handle') %>
     </li>
   <% end %>
 </ol>
