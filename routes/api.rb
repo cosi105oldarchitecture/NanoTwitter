@@ -16,6 +16,7 @@ post "#{API_PATH}/tweets/new" do
       params[:tweet][:body]
     ).to_json
   end
+  redirect '/tweets'
 end
 
 # # Return to timeline after posting new tweet.

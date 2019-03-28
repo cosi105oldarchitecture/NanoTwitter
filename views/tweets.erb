@@ -1,24 +1,24 @@
+
 <ol>
-  <% @timeline.each do |tweet| %>
+  <% (1..@total).each do |num| %>
     <li>
-      "<%= tweet.body %>"
+      "<%= @redis.hget("#{@user.handle}:#{num}", 'body') %>"
+      <br/>
+      - <%= @redis.hget("#{@user.handle}:#{num}", 'author_handle') %>
     </li>
   <% end %>
 </ol>
 
-<br/>
-
-{% if srpn * 10 <  count %}
+<% if (@pagenum + 1) * 10 <  @total %>
 <form action="/tweets" name="next" method="get">
   <input type="submit" value="Next">
-  <input type="hidden" name="pagenum" value="{{ pagenum + 1 }}" >
+  <input type="hidden" name="pagenum" value="{{ @pagenum + 1 }}" >
 </form>
-{% endif %}
+<% end %>
 
-
-{% if srpn > 1 %}
+<% if @pagenum > 0 %>
 <form action="/tweets" name="back" method="get">
   <input type="submit" value="Back">
-  <input type="hidden" name="pagenum" value="{{ pagenum - 1 }}" >
+  <input type="hidden" name="pagenum" value="{{ @pagenum - 1 }}" >
 </form>
-{% endif %}
+<% end %>
