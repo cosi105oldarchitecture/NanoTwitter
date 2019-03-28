@@ -2,9 +2,9 @@
 <ol>
   <% (1..@total).each do |num| %>
     <li>
-      "<%= @redis.hget("#{@user.handle}:#{num}", 'body') %>"
+      "<%= @redis.hget("#{@user.id}:#{num}", 'body') %>"
       <br/>
-      - <%= @redis.hget("#{@user.handle}:#{num}", 'author_handle') %>
+      - <%= @redis.hget("#{@user.id}:#{num}", 'author_handle') %>
     </li>
   <% end %>
 </ol>
