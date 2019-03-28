@@ -68,7 +68,7 @@ post '/login' do
   if login(params)
     # If cache miss, load timeline into cache
     user = session[:user]
-    cache_timeline unless REDIS.exists("user.handle}:timeline_size")
+    cache_timeline unless REDIS.exists("#{user.handle}:timeline_size")
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
