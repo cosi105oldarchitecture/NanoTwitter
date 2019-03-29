@@ -5,11 +5,16 @@ require 'redis'
 require 'json'
 Dir.glob('rake/*.rake').each { |r| load r }
 
-unless Sinatra::Base.production?
-  # load local environment variables
+if Sinatra::Base.production?
+  configure do
+    uri = URI.parse(ENV['REDISTOGO_URL'])
+    REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+  end
+else
   require 'dotenv'
   Dotenv.load 'config/local_vars.env'
   require 'pry-byebug'
+  REDIS = Redis.new
 end
 
 require_relative 'version'
@@ -20,37 +25,10 @@ API_PATH = "/api/#{NanoTwitter::VERSION}"
   Dir["#{ENV['APP_ROOT']}/#{s}/*.rb"].each { |file| require file }
 end
 
-# Comment this out when using a local Redis instancs
-configure do
-  uri = URI.parse(ENV['REDISTOGO_URL'])
-  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
-end
-# REDIS = Redis.new # Uncomment this when using a local Redis instance
-
 # Expire sessions after ten minutes of inactivity
 TEN_MINUTES = 60 * 10
 use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
-
-# Fetches user's timeline from DB & caches it in Redis
-def cache_timeline
-  user = session[:user]
-  return false if user.nil?
-
-  timeline_size = 0
-  user.timeline_tweets.each do |tweet|
-    REDIS.hmset(
-      "#{user.id}:#{timeline_size += 1}", # Key of Redis hash
-      'id', tweet.id,                     # First key-value pair
-      'body', tweet.body,
-      'created_on', tweet.created_on,
-      'author_handle', tweet.author_handle
-    )
-  end
-  # Stores number of Tweets in user's timeline
-  REDIS.set("#{user.id}:timeline_size", timeline_size)
-  true
-end
 
 get '/' do
   erb :landing_page, layout: false
