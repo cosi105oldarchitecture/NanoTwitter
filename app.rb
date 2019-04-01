@@ -3,16 +3,24 @@ Bundler.require
 require 'open-uri'
 require 'redis'
 require 'json'
+require_relative './db/redis_seeder'
+require_relative 'version'
 Dir.glob('rake/*.rake').each { |r| load r }
 
-unless Sinatra::Base.production?
-  # load local environment variables
+if Sinatra::Base.production?
+  configure do
+    uri = URI.parse(ENV['REDISTOGO_URL'])
+    REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+    REDIS.flushall # Clear the cache
+    `cat ./db/timeline_seed_protocol.txt | redis-cli --pipe` # Seed cache
+  end
+else
   require 'dotenv'
   Dotenv.load 'config/local_vars.env'
   require 'pry-byebug'
+  REDIS = Redis.new
+  # write_redis_seed_protocol
 end
-
-require_relative 'version'
 
 ENV['APP_ROOT'] = settings.root
 API_PATH = "/api/#{NanoTwitter::VERSION}"
@@ -20,41 +28,10 @@ API_PATH = "/api/#{NanoTwitter::VERSION}"
   Dir["#{ENV['APP_ROOT']}/#{s}/*.rb"].each { |file| require file }
 end
 
-# Comment this out when using a local Redis instancs
-configure do
-  uri = URI.parse(ENV['REDISTOGO_URL'])
-  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
-end
-
-# REDIS = Redis.new # Uncomment this when using a local Redis instance
-
 # Expire sessions after ten minutes of inactivity
 TEN_MINUTES = 60 * 10
 use Rack::Session::Pool, expire_after: TEN_MINUTES
 helpers Authentication
-
-# Fetches user's timeline from DB & caches it in Redis
-def cache_timeline
-  user = session[:user]
-  return false if user.nil?
-
-  # Handle pre-caching in new thread
-  Thread.new do
-    timeline_size = 0
-    user.timeline_tweets.each do |tweet|
-      REDIS.hmset(
-        "#{user.handle}:#{timeline_size += 1}", # Key of Redis hash
-        'id', tweet.id,                         # First key-value pair
-        'body', tweet.body,
-        'created_on', tweet.created_on,
-        'author_handle', tweet.author_handle
-      )
-    end
-    # Stores number of Tweets in user's timeline
-    REDIS.set("#{user.handle}:timeline_size", timeline_size)
-    true
-  end
-end
 
 get '/' do
   erb :landing_page, layout: false
@@ -146,7 +123,6 @@ get '/tweets/new' do
 end
 
 # Lists user's followed tweets.
-  # Get timeline pieces
 get '/tweets' do
   authenticate_or_home!
   @user = User.find(session[:user].id)
@@ -164,6 +140,9 @@ get '/tweets' do
   if @end > @total
     @end = @total
   end
+  user = User.find(session[:user].id)
+  @timeline = REDIS.get("#{user.id}:timeline_html")
+
   erb :tweets
 end
 

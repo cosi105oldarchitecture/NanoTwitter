@@ -1,12 +1,6 @@
 
 <ol>
-  <% (1..@total).each do |num| %>
-    <li>
-      "<%= @redis.hget("#{@user.handle}:#{num}", 'body') %>"
-      <br/>
-      - <%= @redis.hget("#{@user.handle}:#{num}", 'author_handle') %>
-    </li>
-  <% end %>
+  <%= @timeline %>
 </ol>
 
 <% if (@pagenum + 1) * 10 <  @total %>

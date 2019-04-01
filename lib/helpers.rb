@@ -13,7 +13,7 @@ def set_new_tweet(author_id, author_handle, tweet_body)
     set_hashtags(new_tweet, parsed_tweet[:hashtags])
     set_mentions(new_tweet, parsed_tweet[:mentions])
   end
-  parsed_tweet
+  new_tweet
 end
 
 # Extracts mentions and hashtags from the body of a tweet
@@ -41,4 +41,25 @@ def set_mentions(tweet, mentions)
     mentioned_user = User.find_by(handle: handle)
     mentioned_user.mentioned_tweets << tweet unless mentioned_user.nil?
   end
+end
+
+
+# Fetches user's timeline from DB & caches it in Redis
+def cache_timeline
+  user = session[:user]
+  return false if user.nil?
+
+  timeline_size = 0
+  user.timeline_tweets.each do |tweet|
+    REDIS.hmset(
+      "#{user.id}:#{timeline_size += 1}", # Key of Redis hash
+      'id', tweet.id,                     # First key-value pair
+      'body', tweet.body,
+      'created_on', tweet.created_on,
+      'author_handle', tweet.author_handle
+    )
+  end
+  # Stores number of Tweets in user's timeline
+  REDIS.set("#{user.id}:timeline_size", timeline_size)
+  true
 end

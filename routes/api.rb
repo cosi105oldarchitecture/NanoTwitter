@@ -10,11 +10,13 @@ end
 post "#{API_PATH}/tweets/new" do
   if authenticate
     status 201
-    set_new_tweet(
+    new_tweet = set_new_tweet(
       session[:user].id,
       session[:user].handle,
       params[:tweet][:body]
-    ).to_json
+    )
+    new_tweet_fanout(new_tweet.id)
+    new_tweet.to_json
   end
   redirect '/tweets'
 end
