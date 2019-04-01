@@ -3,6 +3,8 @@ Bundler.require
 require 'open-uri'
 require 'redis'
 require 'json'
+require_relative './db/redis_seeder'
+require_relative 'version'
 Dir.glob('rake/*.rake').each { |r| load r }
 
 if Sinatra::Base.production?
@@ -15,9 +17,12 @@ else
   Dotenv.load 'config/local_vars.env'
   require 'pry-byebug'
   REDIS = Redis.new
+  seed_timeline_html
+  # write_redis_seed
+  # test = ''
+  # REDIS.zrevrange('1000:timeline', 0, -1).each { |t| test << t }
+  # REDIS.set('1000:html', test)
 end
-
-require_relative 'version'
 
 ENV['APP_ROOT'] = settings.root
 API_PATH = "/api/#{NanoTwitter::VERSION}"
@@ -41,9 +46,9 @@ end
 post '/login' do
   if login(params)
     # If cache miss, load timeline into cache in new thread
-    Thread.new do
-      cache_timeline unless REDIS.exists("#{session[:user].id}:timeline_size")
-    end
+    # Thread.new do
+    #   cache_timeline unless REDIS.exists("#{session[:user].id}:timeline_size")
+    # end
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -124,10 +129,12 @@ end
   # Get timeline pieces
 get '/tweets' do
   authenticate_or_home!
-  @user = User.find(session[:user].id)
+  user = User.find(session[:user].id)
+  @timeline = REDIS.get("#{user.id}:timeline")
   # If cache miss, load timeline into cache
-  cache_timeline unless REDIS.exists("#{@user.id}:timeline_size")
-  @total = REDIS.get("#{@user.id}:timeline_size").to_i
-  @redis = REDIS
+  # cache_timeline unless REDIS.exists("#{@user.id}:timeline_size")
+  # @total = REDIS.get("#{@user.id}:timeline_size").to_i
+  # @redis = REDIS
+  # @test
   erb :tweets
 end
