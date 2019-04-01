@@ -11,16 +11,34 @@ def gen_redis_proto(*cmd)
   proto
 end
 
+# Loads each user's timeline HTML into Redis
+def cache_timelines
+  map = {} # Map of each user's timeline HTML
+  TimelinePiece.all.order(tweet_created_on: :desc).each do |t|
+    # Timeline piece's HTML
+    html = "<li>#{t.tweet_body}<br/>-#{t.tweet_author_handle} at #{t.tweet_created_on}</li>"
+    key = "#{t.timeline_owner_id}".to_sym
+    if map[key].nil?
+      map[key] = ''
+    else
+      map[key] << html
+    end
+  end
+  map.keys.each do |owner_id|
+    REDIS.set("#{owner_id}:timeline_html", map[owner_id.to_sym])
+  end
+end
+
 def write_redis_seed_protocol
   map = {} # Map of each user's timeline HTML
   TimelinePiece.all.order(tweet_created_on: :desc).each do |t|
     # Timeline piece's HTML
     html = "<li>#{t.tweet_body}<br/>-#{t.tweet_author_handle} at #{t.tweet_created_on}</li>"
     key = "#{t.timeline_owner_id}".to_sym
-    if map[key].nil? 
+    if map[key].nil?
       map[key] = ''
     else
-      map[key] << html 
+      map[key] << html
     end
   end
   # Generate Redis protocol string for each user's timeline

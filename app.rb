@@ -12,7 +12,7 @@ if Sinatra::Base.production?
     uri = URI.parse(ENV['REDISTOGO_URL'])
     REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
     REDIS.flushall # Clear the cache
-    `cat ./db/timeline_seed_protocol.txt | redis-cli --pipe` # Seed cache
+    cache_timelines
   end
 else
   require 'dotenv'
