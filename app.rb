@@ -11,6 +11,8 @@ if Sinatra::Base.production?
   configure do
     uri = URI.parse(ENV['REDISTOGO_URL'])
     REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+    REDIS.flushall # Clear the cache
+    `cat ./db/timeline_seed_protocol.txt | redis-cli --pipe` # Seed cache
   end
 else
   require 'dotenv'
@@ -18,10 +20,6 @@ else
   require 'pry-byebug'
   REDIS = Redis.new
   # write_redis_seed_protocol
-  # write_redis_seed
-  # test = ''
-  # REDIS.zrevrange('1000:timeline', 0, -1).each { |t| test << t }
-  # REDIS.set('1000:html', test)
 end
 
 ENV['APP_ROOT'] = settings.root
@@ -45,10 +43,6 @@ end
 
 post '/login' do
   if login(params)
-    # If cache miss, load timeline into cache in new thread
-    # Thread.new do
-    #   cache_timeline unless REDIS.exists("#{session[:user].id}:timeline_size")
-    # end
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -126,15 +120,9 @@ get '/tweets/new' do
 end
 
 # Lists user's followed tweets.
-  # Get timeline pieces
 get '/tweets' do
   authenticate_or_home!
   user = User.find(session[:user].id)
   @timeline = REDIS.get("#{user.id}:timeline_html")
-  # If cache miss, load timeline into cache
-  # cache_timeline unless REDIS.exists("#{@user.id}:timeline_size")
-  # @total = REDIS.get("#{@user.id}:timeline_size").to_i
-  # @redis = REDIS
-  # @test
   erb :tweets
 end
