@@ -17,7 +17,7 @@ else
   Dotenv.load 'config/local_vars.env'
   require 'pry-byebug'
   REDIS = Redis.new
-  seed_timeline_html
+  # write_redis_seed_protocol
   # write_redis_seed
   # test = ''
   # REDIS.zrevrange('1000:timeline', 0, -1).each { |t| test << t }
@@ -130,7 +130,7 @@ end
 get '/tweets' do
   authenticate_or_home!
   user = User.find(session[:user].id)
-  @timeline = REDIS.get("#{user.id}:timeline")
+  @timeline = REDIS.get("#{user.id}:timeline_html")
   # If cache miss, load timeline into cache
   # cache_timeline unless REDIS.exists("#{@user.id}:timeline_size")
   # @total = REDIS.get("#{@user.id}:timeline_size").to_i

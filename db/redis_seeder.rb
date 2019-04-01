@@ -28,20 +28,23 @@ def write_redis_seed
   end
 end
 
-def seed_timeline_html
-  result = ''
-  prev_owner_id = nil
-  curr_owner_id = nil
-  TimelinePiece.all.order(timeline_owner_id: :desc, id: :desc).each do |t|
-    if t.timeline_owner_id != curr_owner_id
-      prev_owner_id = curr_owner_id
-      curr_owner_id = t.timeline_owner_id
+def write_redis_seed_protocol
+  map = {} # Map of each user's timeline HTML
+  TimelinePiece.all.order(id: :desc).each do |t|
+    # Timeline piece's HTML
+    html = "<li>#{t.tweet_body}<br/>-#{t.tweet_author_handle} at #{t.tweet_created_on}</li>"
+    key = "#{t.timeline_owner_id}".to_sym
+    if map[key].nil? 
+      map[key] = ''
     else
-      puts 'finish this function!'
+      map[key] << html 
     end
-    result << "<li>#{t.tweet_body}<br/>-#{t.tweet_author_handle} at #{t.tweet_created_on}</li>" # Timeline piece's HTML
   end
-  open('./db/html_seed.txt', 'w') do |file|
-    file << gen_redis_proto('SET', result)
+  # Generate Redis protocol string for each user's timeline
+  redis_protocol = ''
+  map.keys.each do |owner_id|
+    redis_protocol << gen_redis_proto('SET', "#{owner_id}:timeline_html", map[owner_id.to_sym])
   end
+  # Write Redis protocol to seed file
+  open('./db/timeline_seed_protocol.txt', 'w') { |file| file << redis_protocol }
 end
