@@ -3,30 +3,16 @@ Bundler.require
 require 'open-uri'
 require 'redis'
 require 'json'
-require_relative './db/redis_seeder'
 require_relative 'version'
 Dir.glob('rake/*.rake').each { |r| load r }
-
-if Sinatra::Base.production?
-  configure do
-    uri = URI.parse(ENV['REDISTOGO_URL'])
-    REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
-    REDIS.flushall # Clear the cache
-    cache_timelines
-  end
-else
-  require 'dotenv'
-  Dotenv.load 'config/local_vars.env'
-  require 'pry-byebug'
-  REDIS = Redis.new
-  # write_redis_seed_protocol
-end
 
 ENV['APP_ROOT'] = settings.root
 API_PATH = "/api/#{NanoTwitter::VERSION}"
 %w[models lib routes].each do |s|
   Dir["#{ENV['APP_ROOT']}/#{s}/*.rb"].each { |file| require file }
 end
+REDIS = get_redis_object
+set_env_configs
 
 # Expire sessions after ten minutes of inactivity
 TEN_MINUTES = 60 * 10
@@ -43,6 +29,7 @@ end
 
 post '/login' do
   if login(params)
+    check_timeline_cache # Don't redirect until timeline is cached
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -122,7 +109,8 @@ end
 # Lists user's followed tweets.
 get '/tweets' do
   authenticate_or_home!
-  user = User.find(session[:user].id)
-  @timeline = REDIS.get("#{user.id}:timeline_html")
+  redis_key = "#{session[:user].id}:timeline_html"
+  puts "\n\nCACHE MISS\n\n" unless REDIS.exists(redis_key) # Can REMOVE
+  @timeline = REDIS.get(redis_key)
   erb :tweets
 end

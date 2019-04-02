@@ -1,5 +1,14 @@
 # Misc. helper methods for NanoTwitter
 
+# Sets local env configurations if applicable
+def set_env_configs
+  return false if Sinatra::Base.production?
+
+  require 'dotenv'
+  Dotenv.load 'config/local_vars.env'
+  require 'pry-byebug'
+end
+
 # Adds tweet & associated records to db.
 def set_new_tweet(author_id, author_handle, tweet_body)
   unless tweet_body.nil?
@@ -43,23 +52,32 @@ def set_mentions(tweet, mentions)
   end
 end
 
-
-# Fetches user's timeline from DB & caches it in Redis
-def cache_timeline
-  user = session[:user]
-  return false if user.nil?
-
-  timeline_size = 0
-  user.timeline_tweets.each do |tweet|
-    REDIS.hmset(
-      "#{user.id}:#{timeline_size += 1}", # Key of Redis hash
-      'id', tweet.id,                     # First key-value pair
-      'body', tweet.body,
-      'created_on', tweet.created_on,
-      'author_handle', tweet.author_handle
-    )
+# Gets env-specific Redis object
+def get_redis_object
+  redis = nil
+  if Sinatra::Base.production?
+    configure do
+      uri = URI.parse(ENV['REDISTOGO_URL'])
+      redis = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+    end
+  else
+    redis = Redis.new
   end
-  # Stores number of Tweets in user's timeline
-  REDIS.set("#{user.id}:timeline_size", timeline_size)
-  true
+  redis.flushall
+  redis
+end
+
+# Returns cached timeline HTML on cache hit,
+# otherwise generates, caches, & returns timeline HTML.
+def check_timeline_cache
+  user = session[:user]
+  redis_key = "#{user.id}:timeline_html"
+  return REDIS.get(redis_key) if REDIS.exists(redis_key)
+
+  timeline_html = ''
+  user.timeline_tweets.order(created_on: :desc).each do |t|
+    timeline_html << "<li>#{t.body}<br/>-#{t.author_handle} at #{t.created_on}</li>"
+  end
+  REDIS.set(redis_key, timeline_html)
+  timeline_html
 end
