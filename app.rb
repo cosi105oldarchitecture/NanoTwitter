@@ -3,30 +3,16 @@ Bundler.require
 require 'open-uri'
 require 'redis'
 require 'json'
-require_relative './db/redis_seeder'
 require_relative 'version'
 Dir.glob('rake/*.rake').each { |r| load r }
-
-if Sinatra::Base.production?
-  configure do
-    uri = URI.parse(ENV['REDISTOGO_URL'])
-    REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
-    REDIS.flushall # Clear the cache
-    `cat ./db/timeline_seed_protocol.txt | redis-cli --pipe` # Seed cache
-  end
-else
-  require 'dotenv'
-  Dotenv.load 'config/local_vars.env'
-  require 'pry-byebug'
-  REDIS = Redis.new
-  # write_redis_seed_protocol
-end
 
 ENV['APP_ROOT'] = settings.root
 API_PATH = "/api/#{NanoTwitter::VERSION}"
 %w[models lib routes].each do |s|
   Dir["#{ENV['APP_ROOT']}/#{s}/*.rb"].each { |file| require file }
 end
+REDIS = get_redis_object
+set_env_configs
 
 # Expire sessions after ten minutes of inactivity
 TEN_MINUTES = 60 * 10
@@ -46,6 +32,7 @@ post '/login' do
     # If cache miss, load timeline into cache
     user = session[:user]
     cache_timeline unless REDIS.exists("#{user.handle}:timeline_size")
+    check_timeline_cache # Don't redirect until timeline is cached
     redirect '/tweets'
   else
     flash[:notice] = 'wrong handle or password'
@@ -90,7 +77,7 @@ end
 get '/users/following' do
   authenticate_or_home!
   user = session[:user]
-  @followees = user.follows_from_me
+  @followees = user.followees
   erb :user_following
 end
 
@@ -100,15 +87,16 @@ post '/users/following' do
   followee = User.find_by(name: params[:name])
   Follow.create(follower_id: user.id, followee_id: followee.id)
   flash[:notice] = 'succeed'
-  redirect '/users'
+  redirect '/tweets'
 end
 
 get '/users/unfollowing' do
   authenticate_or_home!
-  user = session[:user]
-  @users = User.all - user.followees
+  @user = session[:user]
+  @others = User.where.not(id: @user.id) - @user.followees
   erb :unfollowing
 end
+
 
 # add this to routes if this need to be protected.
 get '/protected' do
@@ -125,6 +113,10 @@ end
 # Lists user's followed tweets.
 get '/tweets' do
   authenticate_or_home!
+  redis_key = "#{session[:user].id}:timeline_html"
+  puts "\n\nCACHE MISS\n\n" unless REDIS.exists(redis_key) # Can REMOVE
+  @timeline = REDIS.get(redis_key)
+  @piece = @timeline.split("</li>")
 
   @pagenum = 0
   if !params[:pagenum].nil?
@@ -133,17 +125,16 @@ get '/tweets' do
   
   user = User.find(session[:user].id)
   @timeline = REDIS.get("#{user.id}:timeline_html")
-  # @total = 0
-  # @begin = 0
-  # if !@timeline.nil?
-  #   @timeline = @timeline.split("</li>")
-  #   @timeline = @timeline[@begin, 10]
-  #   @total = @timeline.count
-  #   @begin = @pagenum * 10
-  # else
-  #   @timeline = [""]
-  # end
+  
+  @total = @piece.count.to_i
 
+  left = @pagenum * 10
+  right = (@pagenum + 1) * 10
+
+  if right > @total
+    right = @total + 1
+  end
+  @cur_page = @piece[left, right]
   erb :tweets
 end
 
