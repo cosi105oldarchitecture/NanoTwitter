@@ -51,6 +51,7 @@ def cache_timeline
 
   timeline_size = 0
   user.timeline_tweets.each do |tweet|
+    puts "1"
     REDIS.hmset(
       "#{user.id}:#{timeline_size += 1}", # Key of Redis hash
       'id', tweet.id,                     # First key-value pair

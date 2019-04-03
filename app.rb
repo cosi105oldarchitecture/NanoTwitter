@@ -125,23 +125,24 @@ end
 # Lists user's followed tweets.
 get '/tweets' do
   authenticate_or_home!
-  @user = User.find(session[:user].id)
-  # If cache miss, load timeline into cache
-  cache_timeline unless REDIS.exists("#{@user.handle}:timeline_size")
-  @total = REDIS.get("#{@user.handle}:timeline_size").to_i
-  @redis = REDIS
 
   @pagenum = 0
   if !params[:pagenum].nil?
     @pagenum = params[:pagenum].to_i
   end
-  @begin = @pagenum*10 + 1
-  @end = (@pagenum + 1) * 10
-  if @end > @total
-    @end = @total
-  end
+  
   user = User.find(session[:user].id)
   @timeline = REDIS.get("#{user.id}:timeline_html")
+  # @total = 0
+  # @begin = 0
+  # if !@timeline.nil?
+  #   @timeline = @timeline.split("</li>")
+  #   @timeline = @timeline[@begin, 10]
+  #   @total = @timeline.count
+  #   @begin = @pagenum * 10
+  # else
+  #   @timeline = [""]
+  # end
 
   erb :tweets
 end

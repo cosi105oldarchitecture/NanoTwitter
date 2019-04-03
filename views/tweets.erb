@@ -1,18 +1,4 @@
 
-<ol>
-  <%= @timeline %>
-</ol>
+<% @timeline %>
 
-<% if (@pagenum + 1) * 10 <  @total %>
-<form action="/tweets" name="next" method="get">
-  <input type="submit" value="Next">
-  <input type="hidden" name="pagenum" value="{{ @pagenum + 1 }}" >
-</form>
-<% end %>
 
-<% if @pagenum > 0 %>
-<form action="/tweets" name="back" method="get">
-  <input type="submit" value="Back">
-  <input type="hidden" name="pagenum" value="{{ @pagenum - 1 }}" >
-</form>
-<% end %>
