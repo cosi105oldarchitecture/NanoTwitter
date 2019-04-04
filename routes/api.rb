@@ -61,7 +61,7 @@ post "#{API_PATH}/users/follow/:handle/:password/:followee_handle" do
   if authenticate
     followee = User.find_by(handle: params[:followee_handle])
     return { error: 'Invalid followee handle.' }.to_json if followee.nil?
-    # follow(session[:user].id, followee.id)
+    follow(session[:user].id, followee.id)
   end
   { name: followee.handle }.to_json
 end
