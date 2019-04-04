@@ -74,7 +74,7 @@ end
 get '/users/following' do
   authenticate_or_home!
   user = session[:user]
-  @followees = user.follows_from_me
+  @followees = user.followees
   erb :user_following
 end
 
@@ -89,8 +89,8 @@ end
 
 get '/users/unfollowing' do
   authenticate_or_home!
-  user = session[:user]
-  @users = User.all - user.followees
+  @user = session[:user]
+  @others = User.where.not(id: @user.id) - @user.followees
   erb :unfollowing
 end
 
@@ -112,5 +112,24 @@ get '/tweets' do
   redis_key = "#{session[:user].id}:timeline_html"
   puts "\n\nCACHE MISS\n\n" unless REDIS.exists(redis_key) # Can REMOVE
   @timeline = REDIS.get(redis_key)
+  @piece = @timeline.split("</li>")
+
+  @pagenum = 0
+  if !params[:pagenum].nil?
+    @pagenum = params[:pagenum].to_i
+  end
+  
+  user = User.find(session[:user].id)
+  @timeline = REDIS.get("#{user.id}:timeline_html")
+  
+  @total = @piece.count.to_i
+
+  left = @pagenum * 10
+  right = (@pagenum + 1) * 10
+
+  if right > @total
+    right = @total + 1
+  end
+  @cur_page = @piece[left, right]
   erb :tweets
 end
