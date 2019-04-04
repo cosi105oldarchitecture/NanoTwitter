@@ -21,7 +21,7 @@ end
 
 def follow(follower_id, followee_id)
   Thread.new do
-    Follow.create(follower_id: follower_id, followee_id: followee_id)
-    HTTParty.post("#{ENV['FANOUT_URL']}/new_follower/#{followee_id}/#{follower_id}")
+    f = Follow.new(follower_id: follower_id, followee_id: followee_id)
+    HTTParty.post("#{ENV['FANOUT_URL']}/new_follower/#{followee_id}/#{follower_id}") if f.save
   end
 end
