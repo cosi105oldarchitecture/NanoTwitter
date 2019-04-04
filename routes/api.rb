@@ -15,7 +15,6 @@ post "#{API_PATH}/tweets/new" do
       session[:user].handle,
       params[:tweet][:body]
     )
-    new_tweet_fanout(new_tweet.id)
     new_tweet.to_json
   end
 end
