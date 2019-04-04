@@ -25,5 +25,5 @@ describe 'NanoTwitter' do
     @ari, @brad, @yang, @pito = users
   end
 
-  Dir["#{ENV['APP_ROOT']}/#{test_pattern}"].each { |file| require file }
+  Dir["#{ENV['APP_ROOT']}/#{test_pattern}"].each(&:require) #{ |file| require file }
 end
