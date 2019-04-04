@@ -2,6 +2,7 @@ require_relative '../lib/seeds_helper'
 
 post '/test/reset/all' do
   delete_all
+  get_redis_object.flushall
   Rake::Task['db:dump:seed'].execute
   status 200
 end
@@ -10,6 +11,7 @@ post '/test/reset' do
   users = params[:users]
   tweets = params[:tweets]
   delete_all
+  get_redis_object
 
   seed_users(users.to_i)
   seed_follows(users.to_i)
