@@ -1,4 +1,3 @@
-
 class Register
   def self.authenticate(params = {})
     return nil if params[:handle].blank? || params[:password].blank?
