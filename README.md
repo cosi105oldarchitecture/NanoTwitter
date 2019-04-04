@@ -62,7 +62,7 @@ By sending a POST request to `/test/reset`, with at least one of the parameters 
 
 ### 0.7 (4/4/19)
 
-- Build client gem (Ari and Brad)
+- Build [NanoTwitter client gem](https://github.com/cosi105/nano_twitter) (Ari and Brad)
 - Improved front-end with pagination (Yang)
 
 ### 0.6 (3/28/19)
