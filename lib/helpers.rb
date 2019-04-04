@@ -85,9 +85,9 @@ def check_timeline_cache
       'author_handle', tweet.author_handle
     )
   timeline_html = ''
-  user.timeline_tweets.order(created_on: :desc).each do |t|
-    timeline_html << "<li>#{t.body}<br/>-#{t.author_handle} at #{t.created_on}</li>"
-
+    user.timeline_tweets.order(created_on: :desc).each do |t|
+      timeline_html << "<li>#{t.body}<br/>-#{t.author_handle} at #{t.created_on}</li>"
+    end
   end
   REDIS.set(redis_key, timeline_html)
   timeline_html
