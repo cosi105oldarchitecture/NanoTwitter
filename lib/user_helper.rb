@@ -15,7 +15,7 @@ def register_user(params)
     nil
   else
     status 201
-    User.create(name: params[:name], handle: handle, password: password)
+    session[:user] = User.create(name: params[:name], handle: handle, password: password)
   end
 end
 
