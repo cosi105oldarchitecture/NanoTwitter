@@ -70,6 +70,8 @@ end
 # Returns cached timeline HTML on cache hit,
 # otherwise generates, caches, & returns timeline HTML.
 def check_timeline_cache
+  return nil if session[:user].nil?
+
   user = session[:user]
   redis_key = "#{user.id}:timeline_html"
   return REDIS.get(redis_key) if REDIS.exists(redis_key)
